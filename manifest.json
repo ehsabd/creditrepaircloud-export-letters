@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "CreditRepairCloud Export Letters",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "js": ["jquery.min.js", "custom-block.js"],
+      "matches":["https://app.creditrepaircloud.com/*"]
+      
+    }
+
+  ],
+  "browser_action": {
+    "default_popup": "popup.html",
+    
+  },
+  "permissions": ["storage"]
+}
