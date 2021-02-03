@@ -19,20 +19,24 @@
         }
 
         if (round === undefined){
-            round = 0;
+            round = 1;
         }
 
         if ($('#hidden_value').val() != '') {
             showLoader();
-            var datastring = "lid=" + $('#hidden_value').val() + "&doc=" + withDoc + "&round=" + round;
-            $.ajax({
-                url: '/everything/preview_letter',
-                data: datastring,
-                type: 'POST',
-                success: function (data) {
-                    console.log(data);
-                    hideLoader();
-                }
+            $('#hidden_value').val().split(',').forEach((id)=>{
+                var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
+
+                $.ajax({
+                    url: '/everything/preview_letter',
+                    data: datastring,
+                    type: 'POST',
+                    success: function (data) {
+                        console.log(data);
+                        hideLoader();
+                    }
+                });
+                
             });
             return false;
         } else {
@@ -51,14 +55,7 @@
     const onExport = () => {
         showLoader();
        
-        previewLetter(function(data){
-                console.log(data);
-                hideLoader();
-            
-        },function(){
-            console.log('letter ajax failed!');
-            hideLoader();
-        });
+        previewLetter();
 
         sendExportMessage();
         
