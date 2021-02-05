@@ -2,6 +2,9 @@
 
 Use `npm run build` to build the extension. Then load unpacked extension from `dist` folder.
 
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:

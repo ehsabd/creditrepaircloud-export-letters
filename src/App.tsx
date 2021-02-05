@@ -1,26 +1,68 @@
-import React from 'react';
+import * as React from "react";
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+type MyProps = {
+};
+
+type MyState = {
+  exportEndpointUrl: string;
+};
+
+type MySettings = {
+  exportEndpointUrl: string;
+}
+
+class App extends React.Component<MyProps, MyState> {
+  
+  constructor(props:MyProps){
+    super(props);
+    this.state = {exportEndpointUrl:''};
+    this.exportEndpointUrlChanged = this.exportEndpointUrlChanged.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
+    this.loadSettings = this.loadSettings.bind(this);
+    this.loadSettings();
+  }
+
+  saveSettings(){
+    const settings:MySettings = {
+       exportEndpointUrl:this.state.exportEndpointUrl
+    };
+    chrome.storage.sync.set({'settings':settings});
+  }
+
+  loadSettings(){
+    const loadSettingsCallBack = (data:any) => {
+      const settings:MySettings = data.settings;
+      console.log(data);
+      console.log(settings);
+      console.log(this.setState);
+      this.setState(settings);
+    };
+
+    chrome.storage.sync.get('settings', loadSettingsCallBack.bind(this) )
+  }
+
+  exportEndpointUrlChanged(e: React.ChangeEvent<HTMLInputElement>){
+    this.setState({exportEndpointUrl: e.target.value })
+  }
+
+  render(){
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section>
+        <div>
+          <label>Export Endpoint URL:</label>
+          <input onChange={this.exportEndpointUrlChanged} value={this.state.exportEndpointUrl}></input>
+          <button  onClick={this.saveSettings}>Save</button>
+        </div>
+      </section>
+      <footer className="">
+       <p> Built with <img src={logo} className="App-logo" alt="logo" /></p>
+      </footer>
     </div>
   );
+  }
 }
 
 export default App;

@@ -62,6 +62,24 @@
             .then(resp => resp.blob());
     };
 
+
+    const sendDataToEndpoint = (data) => {
+        // get endpoint from settings
+        const exportEndpointUrl = 'blablabla';
+        // send data to the endpoint
+        return fetch(exportEndpointUrl,
+            {
+                method: "POST",
+                body: data
+            })
+            .then(resp => resp.json());
+    }
+
+    const parseLetter = (content) => {
+        // parse letter content (sender, receiver , etc.)
+    }
+
+
     const sendExportMessage = () => {
         chrome.extension.sendMessage({ action: "export" }, function (response) {
             console.log(response);
