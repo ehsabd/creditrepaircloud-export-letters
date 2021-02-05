@@ -3,28 +3,28 @@
 
 (function () {
 
-    
-    const showLoader = ()=> {
+
+    const showLoader = () => {
         //TODO add a loader
     }
 
-    const hideLoader = ()=> {
+    const hideLoader = () => {
         //TODO add a loader (hide)
     }
 
     const previewLetter = (round, withDoc) => {
 
-        if (withDoc === undefined){
+        if (withDoc === undefined) {
             withDoc = 0;
         }
 
-        if (round === undefined){
+        if (round === undefined) {
             round = 1;
         }
 
         if ($('#hidden_value').val() != '') {
             showLoader();
-            $('#hidden_value').val().split(',').forEach((id)=>{
+            $('#hidden_value').val().split(',').forEach((id) => {
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
 
                 $.ajax({
@@ -32,11 +32,16 @@
                     data: datastring,
                     type: 'POST',
                     success: function (data) {
+                        fetchPDFBlob(data).then(blob => {
+                            console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
+                            console.log(blob);
+                        })
+                        .catch(() => alert('oh no!'));
                         console.log(data);
                         hideLoader();
                     }
                 });
-                
+
             });
             return false;
         } else {
@@ -46,6 +51,17 @@
 
     }
 
+    const fetchPDFBlob = (content) => {
+        var form = new FormData();
+        form.append('editorcontent', content);
+        return fetch('https://app.creditrepaircloud.com/common/exportfile_batch_print',
+            {
+                method: "POST",
+                body: form
+            })
+            .then(resp => resp.blob());
+    };
+
     const sendExportMessage = () => {
         chrome.extension.sendMessage({ action: "export" }, function (response) {
             console.log(response);
@@ -54,11 +70,11 @@
 
     const onExport = () => {
         showLoader();
-       
+
         previewLetter();
 
         sendExportMessage();
-        
+
         return false;
     }
 
