@@ -10,6 +10,7 @@
       ],
       "js": [
         "jquery.min.js",
+        "crc-letter-parser.js",
         "crc-export-letters.js"
       ]
     }

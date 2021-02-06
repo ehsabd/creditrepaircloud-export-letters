@@ -3,7 +3,6 @@
 
 (function () {
 
-
     const showLoader = () => {
         //TODO add a loader
     }
@@ -31,13 +30,16 @@
                     url: '/everything/preview_letter',
                     data: datastring,
                     type: 'POST',
-                    success: function (data) {
+                    success: function (letterContent) {
+                        
+                        let letterData = parseLetter(letterContent);
+                        letterData.crc_letter_id = id;
                         fetchPDFBlob(data).then(blob => {
                             console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
                             console.log(blob);
                         })
-                        .catch(() => alert('oh no!'));
-                        console.log(data);
+                        .catch(() => alert('Failed: we can\'t get the PDF blob'));
+                        
                         hideLoader();
                     }
                 });
@@ -75,11 +77,7 @@
             .then(resp => resp.json());
     }
 
-    const parseLetter = (content) => {
-        // parse letter content (sender, receiver , etc.)
-    }
-
-
+        
     const sendExportMessage = () => {
         chrome.extension.sendMessage({ action: "export" }, function (response) {
             console.log(response);
