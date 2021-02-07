@@ -2,6 +2,16 @@
 
 
 (function () {
+    /* Adapted from https://stackoverflow.com/a/40289667 CC BY-SA 4.0*/
+    var blobToBase64 = function(blob, callback) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var dataUrl = reader.result;
+            var base64 = dataUrl.split(',')[1];
+            callback(base64);
+        };
+        reader.readAsDataURL(blob);
+    };
 
     const showLoader = () => {
         //TODO add a loader
@@ -35,9 +45,12 @@
                         let letterData = parseLetter(letterContent);
                         letterData.crc_letter_id = id;
                         fetchPDFBlob(letterContent).then(blob => {
-                            console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
-                            letterData.file = blob;
-                            sendDataToEndpoint(letterData)
+                            console.log(`got the blob for lid=${id}, getting blob base64`);
+                            blobToBase64(blob, (base64)=>{
+                                letterData.file = base64;
+                                console.log('now sending it to Google Sheet!');
+                                sendDataToEndpoint(letterData);
+                            });
                         })
                         .catch(() => alert('Failed: we can\'t get the PDF blob'));
                         
@@ -69,11 +82,10 @@
     const sendDataToEndpoint = (data) => {
         chrome.storage.sync.get('settings',(storageData)=>{
             const {exportEndpointUrl} = storageData.settings;
-            console.log(exportEndpointUrl);      
             fetch(exportEndpointUrl,
                 {
                     method: "POST",
-                    body: data
+                    body: JSON.stringify(data),
                 })
                 .then(resp => resp.json());
         
