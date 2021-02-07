@@ -36,7 +36,8 @@
                         letterData.crc_letter_id = id;
                         fetchPDFBlob(data).then(blob => {
                             console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
-                            console.log(blob);
+                            letterData.file = blob;
+                            sendDataToEndpoint(letterContent)
                         })
                         .catch(() => alert('Failed: we can\'t get the PDF blob'));
                         

@@ -23,8 +23,9 @@ const parseLetter = (content) => {
 
     const findSSNumber = (lines) => {
         for (var i = 0; i < lines.length; i++) {
-            if (/^[^0-9]+:[0-9\s]+$/.test(lines[i])) {
-                return { index: i };
+            let m = lines[i].match(/^[^0-9]+:([0-9\s]+)$/) 
+            if (m!=null){
+                return {value:m[1], index: i };
             }
         }
     }
@@ -76,5 +77,5 @@ const parseLetter = (content) => {
     const toAddressLines = lines.slice(ssnumber.index+2,letterDate.index);
     console.log(toAddressLines);
     Object.assign(to, parseAddress(toAddressLines));
-    return {from:from, to:to};
+    return {from:from, to:to, ssn:ssnumber.value};
 }
