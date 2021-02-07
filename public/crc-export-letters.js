@@ -37,7 +37,7 @@
                         fetchPDFBlob(letterContent).then(blob => {
                             console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
                             letterData.file = blob;
-                            sendDataToEndpoint(letterContent)
+                            sendDataToEndpoint(letterData)
                         })
                         .catch(() => alert('Failed: we can\'t get the PDF blob'));
                         
@@ -67,8 +67,8 @@
 
 
     const sendDataToEndpoint = (data) => {
-        chrome.storage.sync.get('settings',(data)=>{
-            const {exportEndpointUrl} = data.settings;
+        chrome.storage.sync.get('settings',(storageData)=>{
+            const {exportEndpointUrl} = storageData.settings;
             console.log(exportEndpointUrl);      
             fetch(exportEndpointUrl,
                 {
