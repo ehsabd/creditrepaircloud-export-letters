@@ -34,7 +34,7 @@
                         
                         let letterData = parseLetter(letterContent);
                         letterData.crc_letter_id = id;
-                        fetchPDFBlob(data).then(blob => {
+                        fetchPDFBlob(letterContent).then(blob => {
                             console.log(`got the blob for lid=${id}, now sending it to Google Sheet!`);
                             letterData.file = blob;
                             sendDataToEndpoint(letterContent)
@@ -67,15 +67,17 @@
 
 
     const sendDataToEndpoint = (data) => {
-        // get endpoint from settings
-        const exportEndpointUrl = 'blablabla';
-        // send data to the endpoint
-        return fetch(exportEndpointUrl,
-            {
-                method: "POST",
-                body: data
-            })
-            .then(resp => resp.json());
+        chrome.storage.sync.get('settings',(data)=>{
+            const {exportEndpointUrl} = data.settings;
+            console.log(exportEndpointUrl);      
+            fetch(exportEndpointUrl,
+                {
+                    method: "POST",
+                    body: data
+                })
+                .then(resp => resp.json());
+        
+        });    
     }
 
         
