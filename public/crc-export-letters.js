@@ -44,6 +44,7 @@
                         
                         let letterData = parseLetter(letterContent);
                         letterData.crc_letter_id = id;
+			letterData.crc_username = document.getElementById('hidden_username').value;
                         fetchPDFBlob(letterContent).then(blob => {
                             console.log(`got the blob for lid=${id}, getting blob base64`);
                             blobToBase64(blob, (base64)=>{
