@@ -43,7 +43,7 @@ class App extends React.Component<MyProps, MyState> {
     chrome.storage.sync.get('settings', loadSettingsCallBack.bind(this) )
   }
 
-  exportEndpointUrlChanged(e: React.ChangeEvent<HTMLInputElement>){
+  exportEndpointUrlChanged(e: React.ChangeEvent<HTMLTextAreaElement>){
     this.setState({exportEndpointUrl: e.target.value })
   }
 
@@ -52,9 +52,13 @@ class App extends React.Component<MyProps, MyState> {
     <div className="App">
       <section>
         <div>
+          <p>
           <label>Export Endpoint URL:</label>
-          <input onChange={this.exportEndpointUrlChanged} value={this.state.exportEndpointUrl}></input>
+          </p>
+          <textarea className="export-endpoint-url" onChange={this.exportEndpointUrlChanged} value={this.state.exportEndpointUrl}></textarea>
+          <div>
           <button  onClick={this.saveSettings}>Save</button>
+          </div>
         </div>
       </section>
       <footer className="">
