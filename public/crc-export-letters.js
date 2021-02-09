@@ -21,6 +21,38 @@
         //TODO add a loader (hide)
     }
 
+    const showExportDialog = () => {
+        let loading = document.createElement('div');
+        loading.className ='loading';
+        loading.innerText = 'Loading ...'
+        let overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;background:rgba(0,0,0,.2);left:0;top:0;right:0;bottom:0;z-index:1000';
+        let dialog = document.createElement('div');
+        dialog.append(loading);
+        dialog.style.cssText = 'position:fixed;height:150px; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+        let buttons = document.createElement('div');
+        buttons.style.marginTop = '20px';
+        let submitBtn = document.createElement('button');
+        submitBtn.innerText = 'Submit';
+        let closeBtn = document.createElement('button');
+        closeBtn.innerText = 'Close';
+        closeBtn.addEventListener('click', ()=>{overlay.remove()});
+        buttons.append(submitBtn,closeBtn);
+
+        getExportEndpointUrl((exportEndpointUrl)=>{
+            fetch(exportEndpointUrl).then((resp)=>resp.text()).then((data)=>{
+                dialog.innerHTML += data;
+            })
+            .finally(()=>{
+                dialog.querySelector('.loading').remove();
+                dialog.appendChild(buttons);
+            });
+        })
+        
+    }
+
     const previewLetter = (round, withDoc) => {
 
         if (withDoc === undefined) {
@@ -79,10 +111,15 @@
             .then(resp => resp.blob());
     };
 
+    const getExportEndpointUrl = (callback) =>{
+        chrome.storage.sync.get('settings',(storageData)=>{
+            const {exportEndpointUrl} = storageData.settings
+            callback (exportEndpointUrl);
+        });
+    }
 
     const sendDataToEndpoint = (data) => {
-        chrome.storage.sync.get('settings',(storageData)=>{
-            const {exportEndpointUrl} = storageData.settings;
+        getExportEndpointUrl ((exportEndpointUrl) =>{
             fetch(exportEndpointUrl,
                 {
                     method: "POST",
@@ -124,7 +161,7 @@
             exportBtn.style.cssText = btn.style.cssText;
             exportBtn.className = 'gray-btn-big';
             exportBtn.innerHTML = '<a href="#" class="btn-export-letters">Export Letters</a>';
-            exportBtn.addEventListener('click', onExport);
+            exportBtn.addEventListener('click', showExportDialog);
 
             btn.parentElement.append(exportBtn);
         })
