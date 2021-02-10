@@ -34,12 +34,17 @@
 
     const showExportDialog = () => {
 
+        const onProgress = (percent)=>{
+
+            progressBar.style.background = `linear-gradient(45deg, #005 ${Math.round(percent)}%, white ${Math.round(percent)}%, white )`;
+        }
+
         const onSubmit = ()=>{
             const form = dialog.querySelector('form');
             if (form!=null){
-                exportLetters(serializeForm(form));
+                exportLetters(onProgress, serializeForm(form));
             }else{
-                exportLetters();
+                exportLetters(onProgress);
             }   
         }
 
@@ -50,7 +55,7 @@
         overlay.style.cssText = 'position:fixed;background:rgba(0,0,0,.2);left:0;top:0;right:0;bottom:0;z-index:1000';
         let dialog = document.createElement('div');
         dialog.append(loading);
-        dialog.style.cssText = 'position:fixed;height:150px; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
+        dialog.style.cssText = 'position:fixed; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
         let buttons = document.createElement('div');
@@ -62,6 +67,8 @@
         closeBtn.innerText = 'Close';
         closeBtn.addEventListener('click', ()=>{overlay.remove()});
         buttons.append(submitBtn,closeBtn);
+        let progressBar = document.createElement('div');
+        progressBar.style.cssText = 'height:4px; margin-top:20px; border-radius:2px;'
 
         getExportEndpointUrl((exportEndpointUrl)=>{
             fetch(exportEndpointUrl).then((resp)=>resp.text()).then((data)=>{
@@ -70,12 +77,13 @@
             .finally(()=>{
                 dialog.querySelector('.loading').remove();
                 dialog.appendChild(buttons);
+                dialog.append(progressBar)
             });
         })
         
     }
 
-    const exportLetters = (extraData , round, withDoc) => {
+    const exportLetters = (onProgress, extraData , round, withDoc) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
@@ -87,7 +95,10 @@
 
         if ($('#hidden_value').val() != '') {
             showLoader();
-            $('#hidden_value').val().split(',').forEach((id) => {
+            letterIds = $('#hidden_value').val().split(',');
+            let letterCount = letterIds.length;
+            let counter = 0;
+            letterIds.forEach((id) => {
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
 
                 $.ajax({
@@ -107,7 +118,10 @@
                             blobToBase64(blob, (base64)=>{
                                 letterData.file = base64;
                                 console.log('now sending it to Google Sheet!');
-                                sendDataToEndpoint(letterData);
+                                sendDataToEndpoint(letterData, ()=>{
+                                    counter++;
+                                    onProgress(counter/letterCount*100);
+                                });
                             });
                         })
                         .catch(() => alert('Failed: we can\'t get the PDF blob'));
@@ -143,15 +157,18 @@
         });
     }
 
-    const sendDataToEndpoint = (data) => {
+    const sendDataToEndpoint = (data, successCallback, failureCallback) => {
         getExportEndpointUrl ((exportEndpointUrl) =>{
             fetch(exportEndpointUrl,
                 {
                     method: "POST",
                     body: JSON.stringify(data),
                 })
-                .then(resp => resp.json());
-        
+                .then(resp => resp.json())
+                .then(data =>{
+                    successCallback(data);
+                })
+                
         });    
     }
 
