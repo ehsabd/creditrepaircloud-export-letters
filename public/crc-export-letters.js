@@ -2,6 +2,17 @@
 
 
 (function () {
+
+    /* Adapted from https://gomakethings.com/serializing-form-data-with-the-vanilla-js-formdata-object/ MIT License*/
+    var serializeForm = function (form) {
+        var obj = {};
+        var formData = new FormData(form);
+        for (var key of formData.keys()) {
+            obj[key] = formData.get(key);
+        }
+        return obj;
+    };
+
     /* Adapted from https://stackoverflow.com/a/40289667 CC BY-SA 4.0*/
     var blobToBase64 = function(blob, callback) {
         var reader = new FileReader();
@@ -22,6 +33,16 @@
     }
 
     const showExportDialog = () => {
+
+        const onSubmit = ()=>{
+            const form = dialog.querySelector('form');
+            if (form!=null){
+                exportLetters(serializeForm(form));
+            }else{
+                exportLetters();
+            }   
+        }
+
         let loading = document.createElement('div');
         loading.className ='loading';
         loading.innerText = 'Loading ...'
@@ -36,6 +57,7 @@
         buttons.style.marginTop = '20px';
         let submitBtn = document.createElement('button');
         submitBtn.innerText = 'Submit';
+        submitBtn.addEventListener('click', onSubmit);
         let closeBtn = document.createElement('button');
         closeBtn.innerText = 'Close';
         closeBtn.addEventListener('click', ()=>{overlay.remove()});
@@ -53,7 +75,7 @@
         
     }
 
-    const previewLetter = (round, withDoc) => {
+    const exportLetters = (extraData , round, withDoc) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
@@ -76,7 +98,10 @@
                         
                         let letterData = parseLetter(letterContent);
                         letterData.crc_letter_id = id;
-			letterData.crc_username = document.getElementById('hidden_username').value;
+                        letterData.crc_username = document.getElementById('hidden_username').value;
+                        if (extraData){
+                            Object.assign(letterData, extraData);
+                        }
                         fetchPDFBlob(letterContent).then(blob => {
                             console.log(`got the blob for lid=${id}, getting blob base64`);
                             blobToBase64(blob, (base64)=>{
@@ -137,15 +162,6 @@
         });
     }
 
-    const onExport = () => {
-        showLoader();
-
-        previewLetter();
-
-        sendExportMessage();
-
-        return false;
-    }
 
     const grayBtnBigs = Array.from(document.querySelectorAll('.gray-btn-big'));
     const printBtn = grayBtnBigs.filter((item) => {
