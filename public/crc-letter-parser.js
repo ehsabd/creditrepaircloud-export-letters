@@ -41,7 +41,7 @@ const parseLetter = (content) => {
     const parseAddress = (lines) => {
         let out = {}
         const lastLine = lines.pop();
-        const m = lastLine.match(/(.*),\s*([a-zA-Z]*)\s*([0-9]*)/);
+        const m = lastLine.match(/(.*),\s*([a-zA-Z\s]*)\s*([0-9]*)/);
         if (m!=null){
             out.address_city = m[1];
             out.address_state = m[2];

@@ -46,6 +46,8 @@
             }else{
                 exportLetters(onProgress);
             }   
+            submitBtn.remove();
+            endpointFormWrap.remove();
         }
 
         let loading = document.createElement('div');
@@ -54,9 +56,10 @@
         let overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;background:rgba(0,0,0,.2);left:0;top:0;right:0;bottom:0;z-index:1000';
         let dialog = document.createElement('div');
-        dialog.append(loading);
         dialog.style.cssText = 'position:fixed; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
         overlay.appendChild(dialog);
+        endpointFormWrap = document.createElement('div');
+        dialog.append(loading, endpointFormWrap);
         document.body.appendChild(overlay);
         let buttons = document.createElement('div');
         buttons.style.marginTop = '20px';
@@ -72,7 +75,7 @@
 
         getExportEndpointUrl((exportEndpointUrl)=>{
             fetch(exportEndpointUrl).then((resp)=>resp.text()).then((data)=>{
-                dialog.innerHTML += data;
+                endpointFormWrap.innerHTML += data;
             })
             .finally(()=>{
                 dialog.querySelector('.loading').remove();
@@ -96,17 +99,17 @@
         if ($('#hidden_value').val() != '') {
             showLoader();
             letterIds = $('#hidden_value').val().split(',');
-            let letterCount = letterIds.length;
-            let counter = 0;
+            let stepsCount = (letterIds.length)*3;
+            let stepCounter = 0;
             letterIds.forEach((id) => {
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
-
                 $.ajax({
                     url: '/everything/preview_letter',
                     data: datastring,
                     type: 'POST',
                     success: function (letterContent) {
-                        
+                        stepCounter++;
+                        onProgress(stepCounter/stepsCount*100);
                         let letterData = parseLetter(letterContent);
                         letterData.crc_letter_id = id;
                         letterData.crc_username = document.getElementById('hidden_username').value;
@@ -114,13 +117,16 @@
                             Object.assign(letterData, extraData);
                         }
                         fetchPDFBlob(letterContent).then(blob => {
+                            stepCounter++
+                            onProgress(stepCounter/stepsCount*100);
                             console.log(`got the blob for lid=${id}, getting blob base64`);
                             blobToBase64(blob, (base64)=>{
                                 letterData.file = base64;
                                 console.log('now sending it to Google Sheet!');
-                                sendDataToEndpoint(letterData, ()=>{
-                                    counter++;
-                                    onProgress(counter/letterCount*100);
+                                sendDataToEndpoint(letterData, (data)=>{
+                                    console.log(data);
+                                    stepCounter++;
+                                    onProgress(stepCounter/stepsCount*100);
                                 });
                             });
                         })
