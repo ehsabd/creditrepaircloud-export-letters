@@ -39,27 +39,30 @@
             progressBar.style.background = `linear-gradient(45deg, #005 ${Math.round(percent)}%, white ${Math.round(percent)}%, white )`;
         }
 
+        const onComplete = () => {
+            message.innerText = '<SUCCESS_MESSAGE>';
+        }
+
         const onSubmit = ()=>{
             const form = dialog.querySelector('form');
             if (form!=null){
-                exportLetters(onProgress, serializeForm(form));
+                exportLetters(onProgress, onComplete, serializeForm(form));
             }else{
-                exportLetters(onProgress);
+                exportLetters(onProgress, onComplete);
             }   
             submitBtn.remove();
             endpointFormWrap.remove();
         }
 
-        let loading = document.createElement('div');
-        loading.className ='loading';
-        loading.innerText = 'Loading ...'
+        let message = document.createElement('div');
+        message.innerText = 'Loading ...'
         let overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;background:rgba(0,0,0,.2);left:0;top:0;right:0;bottom:0;z-index:1000';
         let dialog = document.createElement('div');
         dialog.style.cssText = 'position:fixed; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
         overlay.appendChild(dialog);
         endpointFormWrap = document.createElement('div');
-        dialog.append(loading, endpointFormWrap);
+        dialog.append(message, endpointFormWrap);
         document.body.appendChild(overlay);
         let buttons = document.createElement('div');
         buttons.style.marginTop = '20px';
@@ -78,7 +81,7 @@
                 endpointFormWrap.innerHTML += data;
             })
             .finally(()=>{
-                dialog.querySelector('.loading').remove();
+                message.innerText = '';
                 dialog.appendChild(buttons);
                 dialog.append(progressBar)
             });
@@ -86,7 +89,7 @@
         
     }
 
-    const exportLetters = (onProgress, extraData , round, withDoc) => {
+    const exportLetters = (onProgress, onComplete, extraData , round, withDoc) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
@@ -127,6 +130,9 @@
                                     console.log(data);
                                     stepCounter++;
                                     onProgress(stepCounter/stepsCount*100);
+                                    if (stepCounter == stepsCount){
+                                        onComplete();
+                                    }
                                 });
                             });
                         })
@@ -199,7 +205,7 @@
             let exportBtn = document.createElement('div');
             exportBtn.style.cssText = btn.style.cssText;
             exportBtn.className = 'gray-btn-big';
-            exportBtn.innerHTML = '<a href="#" class="btn-export-letters">Export Letters</a>';
+            exportBtn.innerHTML = '<a href="#" class="btn-export-letters"><EXPORT_BUTTON_TEXT></a>';
             exportBtn.addEventListener('click', showExportDialog);
 
             btn.parentElement.append(exportBtn);
