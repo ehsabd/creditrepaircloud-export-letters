@@ -44,11 +44,14 @@
         }
 
         const onSubmit = ()=>{
-            const form = dialog.querySelector('form');
+            const printOptions = printOptionsForm.printOptions.value.split(',');
+            const round = printOptions[0];
+            const doc = printOptions[1];
+            const form = endpointFormWrap.querySelector('form');
             if (form!=null){
-                exportLetters(onProgress, onComplete, serializeForm(form));
+                exportLetters(onProgress, onComplete, serializeForm(form), round, doc);
             }else{
-                exportLetters(onProgress, onComplete);
+                exportLetters(onProgress, onComplete, null , round, doc);
             }   
             submitBtn.remove();
             endpointFormWrap.remove();
@@ -61,7 +64,16 @@
         let dialog = document.createElement('div');
         dialog.style.cssText = 'position:fixed; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
         overlay.appendChild(dialog);
-        endpointFormWrap = document.createElement('div');
+        let printOptionsForm = document.createElement('form');
+        printOptionsForm.innerHTML = `
+        
+        <input checked="" type="radio" name="printOptions" value="1,1" id="option1"><label for="option1"> Round 1 letters only </label>
+        <input type="radio" name="printOptions" value="0,1" id="option2" ><label for="option2">All letters</label>
+        <input type="radio" name="printOptions" value="2,0" id="option3" ><label for="option3">Exclude</label>
+    
+        `;
+        let endpointFormWrap = document.createElement('div');
+        dialog.append(printOptionsForm);
         dialog.append(message, endpointFormWrap);
         document.body.appendChild(overlay);
         let buttons = document.createElement('div');
