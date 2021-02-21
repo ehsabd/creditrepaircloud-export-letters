@@ -136,8 +136,8 @@
                             onProgress(stepCounter/stepsCount*100);
                             console.log(`got the blob for lid=${id}, getting blob base64`);
                             blobToBase64(blob, (base64)=>{
+                                console.log('now sending it to Google Sheet : '+ JSON.stringify(letterData));
                                 letterData.file = base64;
-                                console.log('now sending it to Google Sheet!');
                                 sendDataToEndpoint(letterData, (data)=>{
                                     console.log(data);
                                     stepCounter++;

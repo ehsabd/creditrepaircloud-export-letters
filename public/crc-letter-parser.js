@@ -62,7 +62,7 @@ const parseLetter = (content) => {
         .split(delimiterRegex)
         .map((l) => l.replace(delimiterRegex, '').replace(/<[/]*div[^>]*>/g, '').trim())
         .filter((l) => l.length > 0);
-    console.log(lines)
+    console.log(JSON.stringify(lines))
     // parse letter content (sender, receiver , etc.)
     let from = {address_country:'US'};
     let to = {address_country:'US'};
