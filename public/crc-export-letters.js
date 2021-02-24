@@ -188,7 +188,7 @@
                     method: "POST",
                     body: JSON.stringify(data),
                 })
-                .then(resp => resp.json())
+                .then(resp => resp.text())
                 .then(data =>{
                     successCallback(data);
                 })
