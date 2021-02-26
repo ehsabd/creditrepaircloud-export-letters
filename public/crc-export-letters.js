@@ -43,15 +43,21 @@
             message.innerText = '<SUCCESS_MESSAGE>';
         }
 
+        const onError = (error) => {
+            let errorAlert = document.createElement('div');
+            errorAlert.innerText = error;
+            dialog.append(errorAlert);       
+        }
+
         const onSubmit = ()=>{
             const printOptions = printOptionsForm.printOptions.value.split(',');
             const round = printOptions[0];
             const doc = printOptions[1];
             const form = endpointFormWrap.querySelector('form');
             if (form!=null){
-                exportLetters(onProgress, onComplete, serializeForm(form), round, doc);
+                exportLetters(onProgress, onComplete, onError, serializeForm(form), round, doc);
             }else{
-                exportLetters(onProgress, onComplete, null , round, doc);
+                exportLetters(onProgress, onComplete, onError, null , round, doc);
             }   
             submitBtn.remove();
             endpointFormWrap.remove();
@@ -101,7 +107,7 @@
         
     }
 
-    const exportLetters = (onProgress, onComplete, extraData , round, withDoc) => {
+    const exportLetters = (onProgress, onComplete, onError, extraData , round, withDoc) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
@@ -136,7 +142,7 @@
                             onProgress(stepCounter/stepsCount*100);
                             console.log(`got the blob for lid=${id}, getting blob base64`);
                             blobToBase64(blob, (base64)=>{
-                                console.log('now sending it to Google Sheet : '+ JSON.stringify(letterData));
+                                console.log('now sending it to end point : '+ JSON.stringify(letterData));
                                 letterData.file = base64;
                                 sendDataToEndpoint(letterData, (data)=>{
                                     console.log(data);
@@ -145,6 +151,9 @@
                                     if (stepCounter == stepsCount){
                                         onComplete();
                                     }
+                                }, (error)=>{
+                                    onError('Error sending to the endpoint. letterData: '+ JSON.stringify(letterData)+
+                                    ', error:'+ error)
                                 });
                             });
                         })
@@ -190,8 +199,14 @@
                 })
                 .then(resp => resp.text())
                 .then(data =>{
+                    if (~data.indexOf('"error":')){
+                        failureCallback(data);
+                    }
                     successCallback(data);
                 })
+                .catch((error) => {
+                    failureCallback(error);
+                });
                 
         });    
     }
