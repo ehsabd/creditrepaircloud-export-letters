@@ -1,13 +1,20 @@
-
-
-
 const parseLetter = (content) => {
+    let doc = null;
+    if (typeof document === 'undefined'){
+        const jsdom = require("jsdom");
+        const { JSDOM } = jsdom;
+        const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+        doc = dom.window.document;    
+    }else{
+        doc = document;
+    }
+
     console.log(content);
     /*
     From https://stackoverflow.com/a/50949805 CC BY-SA 4.0
     */
     const fixEncodedWhitespace = (str) => {
-        var elem = document.createElement("textarea");
+        var elem = doc.createElement("textarea");
         elem.innerHTML = str;
         return elem.value.trim();     
     }
@@ -44,7 +51,7 @@ const parseLetter = (content) => {
         const m = lastLine.match(/(.*),\s*([a-zA-Z\s]*)\s*([0-9]*)/);
         if (m!=null){
             out.address_city = m[1];
-            out.address_state = m[2];
+            out.address_state = m[2].trim();
             out.address_zip = m[3];    
         }
         if (lines.length>0){
@@ -79,3 +86,5 @@ const parseLetter = (content) => {
     Object.assign(to, parseAddress(toAddressLines));
     return {from:from, to:to, ssn:ssnumber.value};
 }
+
+module.exports = parseLetter;
