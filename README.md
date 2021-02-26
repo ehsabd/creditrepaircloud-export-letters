@@ -9,7 +9,7 @@ You can configure the **Export Endpoint URL** in the extension popup panel.
 ### Sent Data
 The extension sends a request for each selected letter in the batch pring page to the endpoint. The data is sent using JSON with the following format:
 
-```
+```json
 {
    "from":{
       "address_country":"US",
