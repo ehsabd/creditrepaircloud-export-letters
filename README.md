@@ -36,7 +36,7 @@ The extension sends a request for each selected letter in the batch pring page t
 ```
 ### Expected Response from the Endpoint
 
-If the endpoint sends an HTML response with an error status code (e.g., 400) or a JSON valid response that includes `error` key, the endpoint HTML response will be shown to the user as an error message. Otherwise, the extension considers a successful operation on the endpoint and shows progress to the user. In any occurances, the HTML respones will be logged into the console.
+If the endpoint sends an HTTP response with an error status code (e.g., 400) or a JSON valid response that includes `error` key, the endpoint response will be shown to the user as an error message. Otherwise, the extension considers a successful operation on the endpoint and shows progress to the user. In any occurances, the endpoint response body will be logged into the console.
 
 ## Testing
 
