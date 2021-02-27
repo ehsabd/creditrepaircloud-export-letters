@@ -45,14 +45,24 @@ const parseLetter = (content) => {
         }
     }
 
+    const findCityStateZip = (lines) =>{
+        for (let i=lines.length-1;i>=0;i--){
+            const m = lines[i].match(/(.*)\s*,\s*([a-zA-Z\s]*)([0-9]*)/);
+            if (m!=null){
+                console.log(m);
+                return [i,{address_city : m[1]
+                ,address_state : m[2].trim()
+                ,address_zip : m[3]}];    
+            }
+        }       
+    }
+
     const parseAddress = (lines) => {
         let out = {}
-        const lastLine = lines.pop();
-        const m = lastLine.match(/(.*),\s*([a-zA-Z\s]*)\s*([0-9]*)/);
-        if (m!=null){
-            out.address_city = m[1];
-            out.address_state = m[2].trim();
-            out.address_zip = m[3];    
+        const cityStateZip = findCityStateZip(lines);
+        if (cityStateZip!=undefined){
+            out = cityStateZip[1];
+            lines.splice(cityStateZip[0]);
         }
         if (lines.length>0){
             out.address_line1 = lines.shift();
