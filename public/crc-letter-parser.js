@@ -51,9 +51,9 @@ const parseLetter = (content) => {
             const m = lines[i].match(/(.*)\s*,\s*([a-zA-Z\s]*)([0-9]*)/);
             if (m!=null){
                 console.log(m);
-                return [i,{address_city : m[1]
+                return {index:i, value:{address_city : m[1]
                 ,address_state : m[2].trim()
-                ,address_zip : m[3]}];    
+                ,address_zip : m[3]}};    
             }
         }       
     }
@@ -61,7 +61,7 @@ const parseLetter = (content) => {
     const parseAddress = (lines) => {
         const cityStateZip = findCityStateZip(lines);
         if (cityStateZip!=undefined){
-            let out = cityStateZip[1];
+            let out = cityStateZip.value;
             lines.splice(cityStateZip[0]);
             if (lines.length>0){
                 out.address_line1 = lines.shift();
@@ -69,7 +69,7 @@ const parseLetter = (content) => {
             if (lines.length>0){
                 out.address_line2 = lines[0];
             }
-            return out;
+            return {stopIndex: cityStateZip.index, value:out};
         }
     }
 
@@ -88,12 +88,12 @@ const parseLetter = (content) => {
     const ssnumber = findSSNumber(lines);
     const fromAddressLines = lines.slice(1, dob.index);
     console.log(fromAddressLines);
-    Object.assign(from, parseAddress(fromAddressLines));
+    Object.assign(from, parseAddress(fromAddressLines).value);
     const letterDate = findLetterDate(lines, ssnumber.index+1);
     to.name = lines[ssnumber.index+1]
     const toAddressLines = lines.slice(ssnumber.index+2,letterDate.index);
     console.log(toAddressLines);
-    Object.assign(to, parseAddress(toAddressLines));
+    Object.assign(to, parseAddress(toAddressLines).value);
     return {from:from, to:to, ssn:ssnumber.value};
 }
 
