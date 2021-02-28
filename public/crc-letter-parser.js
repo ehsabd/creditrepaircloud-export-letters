@@ -62,7 +62,7 @@ const parseLetter = (content) => {
         const cityStateZip = findCityStateZip(lines);
         if (cityStateZip!=undefined){
             let out = cityStateZip.value;
-            lines.splice(cityStateZip[0]);
+            lines.splice(cityStateZip.index);
             if (lines.length>0){
                 out.address_line1 = lines.shift();
             }

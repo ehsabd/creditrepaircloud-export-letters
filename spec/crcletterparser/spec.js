@@ -104,7 +104,6 @@ describe("Letter Parser", function () {
             },
             ssn: ' 1113'
           });
-        expect(output.to.address_state).toEqual(item.to.address_state);
     });
 
     it("Should parse the letter correctly when the SS# comes before Date of Birth and both addresses after Date of Birth", function () {
