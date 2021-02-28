@@ -21,14 +21,16 @@ describe("Letter Parser", function () {
               name: 'Sample Client',
               address_city: 'Santa Monica',
               address_state: 'California',
-              address_zip: '90401'
+              address_zip: '90401',
+              address_line1: '1234 Main Street'
             },
             to: {
               address_country: 'US',
               name: 'TransUnion LLC Consumer Dispute Center',
               address_city: 'Chester',
               address_state: 'PA',
-              address_zip: '45678'
+              address_zip: '45678',
+              address_line1: 'PO Box 2000'
             },
             ssn: ' 1111'
           });
@@ -59,14 +61,16 @@ describe("Letter Parser", function () {
               name: 'Sample Client',
               address_city: 'San Francisco',
               address_state: 'California',
-              address_zip: '23456'
+              address_zip: '23456',
+              address_line1: '1111 McKinnon Avenue APT 3333'       
             },
             to: {
               address_country: 'US',
               name: 'Dest Name2',
               address_city: 'Chester',
               address_state: 'PA',
-              address_zip: '12345'
+              address_zip: '12345',
+              address_line1: 'PO Box 2000'
             },
             ssn: ' 1113'
           });
@@ -93,14 +97,16 @@ describe("Letter Parser", function () {
               name: 'Sample Client',
               address_city: 'San Francisco',
               address_state: 'California',
-              address_zip: '23456'
+              address_zip: '23456',
+              address_line1:'1111 McKinnon Avenue APT 3333'
             },
             to: {
               address_country: 'US',
               name: 'Dest Name2',
               address_city: 'Chester',
               address_state: 'PA',
-              address_zip: '12345'
+              address_zip: '12345',
+              address_line1:'PO Box 2000'
             },
             ssn: ' 1113'
           });
