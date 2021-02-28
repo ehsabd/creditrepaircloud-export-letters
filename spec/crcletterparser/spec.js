@@ -114,8 +114,7 @@ describe("Letter Parser", function () {
 
     it("Should parse the letter correctly when the SS# comes before Date of Birth and both addresses after Date of Birth", function () {
 
-        const item = {
-            content: `<div class="pageBreak" style="page-break-after:always; display: inline-block;">
+            content= `<div class="pageBreak" style="page-break-after:always; display: inline-block;">
             <p>John Doe
             <br />SS#: 1111
             <br />
@@ -130,12 +129,28 @@ describe("Letter Parser", function () {
             <br />
             <br />01/01/2021&nbsp;<br />
             <br />
-            <br />To whom it may concern</p>`,
-            from: { address_state: 'California' },
-            to: { address_state: 'PA' }
-        }
-        const output = parseLetter(item.content);
-        expect(output.from.address_state).toEqual(item.from.address_state);
-        expect(output.to.address_state).toEqual(item.to.address_state);
+            <br />To whom it may concern</p>`;
+        
+        const output = parseLetter(content);
+        expect(output).toEqual({
+            from: {
+              address_country: 'US',
+              name: 'John Doe',
+              address_city: 'Roseville',
+              address_state: 'California',
+              address_zip: '12345',
+              address_line1:'1234 Jibgy Drive AXN 1234'
+            },
+            to: {
+              address_country: 'US',
+              name: 'Transunion',
+              address_city: 'Chester',
+              address_state: 'PA',
+              address_zip: '19016',
+              address_line1: 'TransUnion LLC Consumer Dispute Center',
+              address_line2: 'PO Box 2000'
+            },
+            ssn: ' 1111'
+          });
     });
 });

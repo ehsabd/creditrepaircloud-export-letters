@@ -59,15 +59,16 @@ const parseLetter = (content) => {
     }
 
     const parseAddress = (lines) => {
-        const cityStateZip = findCityStateZip(lines);
+        const lines_clone = [...lines];
+        const cityStateZip = findCityStateZip(lines_clone);
         if (cityStateZip!=undefined){
             let out = cityStateZip.value;
-            lines.splice(cityStateZip.index);
-            if (lines.length>0){
-                out.address_line1 = lines.shift();
+            lines_clone.splice(cityStateZip.index);
+            if (lines_clone.length>0){
+                out.address_line1 = lines_clone.shift();
             }
-            if (lines.length>0){
-                out.address_line2 = lines[0];
+            if (lines_clone.length>0){
+                out.address_line2 = lines_clone[0];
             }
             return {stopIndex: cityStateZip.index, value:out};
         }
@@ -89,12 +90,28 @@ const parseLetter = (content) => {
     const afterdobssnumberindex = Math.max(dob.index, ssnumber.index)+1;
     const fromAddressLines = lines.slice(1, dob.index);
     console.log(fromAddressLines);
-    Object.assign(from, parseAddress(fromAddressLines).value);
-    const letterDate = findLetterDate(lines,afterdobssnumberindex);
-    to.name = lines[afterdobssnumberindex]
-    const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
-    console.log(toAddressLines);
-    Object.assign(to, parseAddress(toAddressLines).value);
+    const fromParsed = parseAddress(fromAddressLines);
+    if (fromParsed){
+        Object.assign(from, fromParsed.value);
+        const letterDate = findLetterDate(lines, afterdobssnumberindex);
+        to.name = lines[afterdobssnumberindex]
+        const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
+        console.log(toAddressLines);
+        Object.assign(to, parseAddress(toAddressLines).value);    
+    }else{ //Fallback mode, both addresses come after DOB/SS# 
+        fallbackAddressLines = lines.slice(afterdobssnumberindex);
+        const fallbackParsed = parseAddress(fallbackAddressLines);
+        if (fallbackParsed){
+            Object.assign(from, fallbackParsed.value);
+            to.name = fallbackAddressLines[fallbackParsed.stopIndex+1];
+            fallbackToAddressLines = fallbackAddressLines.slice(fallbackParsed.stopIndex+2);
+            const fallbackToParsed = parseAddress(fallbackToAddressLines)
+            Object.assign(to, fallbackToParsed.value);
+            
+        }else{
+            console.log('Cannot parse addresses even in fallback mode');
+        }
+    }
     return {from:from, to:to, ssn:ssnumber.value};
 }
 
