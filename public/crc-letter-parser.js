@@ -86,12 +86,13 @@ const parseLetter = (content) => {
     from.name = lines[0];
     const dob = findDob(lines);
     const ssnumber = findSSNumber(lines);
+    const afterdobssnumberindex = Math.max(dob.index, ssnumber.index)+1;
     const fromAddressLines = lines.slice(1, dob.index);
     console.log(fromAddressLines);
     Object.assign(from, parseAddress(fromAddressLines).value);
-    const letterDate = findLetterDate(lines, ssnumber.index+1);
-    to.name = lines[ssnumber.index+1]
-    const toAddressLines = lines.slice(ssnumber.index+2,letterDate.index);
+    const letterDate = findLetterDate(lines,afterdobssnumberindex);
+    to.name = lines[afterdobssnumberindex]
+    const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
     console.log(toAddressLines);
     Object.assign(to, parseAddress(toAddressLines).value);
     return {from:from, to:to, ssn:ssnumber.value};
