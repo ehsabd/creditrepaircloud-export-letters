@@ -21,10 +21,11 @@ const parseLetter = (content) => {
 
 
     const findDob = (lines) => {
-        return {
-            index: 3, //TODO: fix this    
-
-            value: lines[3].split(':')[1].trim()
+        for (var i = 0; i < lines.length; i++) {
+            let m = lines[i].match(/^\s*(dob|date\s*of\s*birth)\s*:(.*)$/i) 
+            if (m!=null){
+                return {value:m[2], index: i };
+            }
         }
     }
 
