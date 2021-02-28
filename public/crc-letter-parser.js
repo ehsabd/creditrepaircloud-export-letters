@@ -59,19 +59,18 @@ const parseLetter = (content) => {
     }
 
     const parseAddress = (lines) => {
-        let out = {}
         const cityStateZip = findCityStateZip(lines);
         if (cityStateZip!=undefined){
-            out = cityStateZip[1];
+            let out = cityStateZip[1];
             lines.splice(cityStateZip[0]);
+            if (lines.length>0){
+                out.address_line1 = lines.shift();
+            }
+            if (lines.length>0){
+                out.address_line2 = lines[0];
+            }
+            return out;
         }
-        if (lines.length>0){
-            out.address_line1 = lines.shift();
-        }
-        if (lines.length>0){
-            out.address_line2 = lines[0];
-        }
-        return out;
     }
 
     content = fixEncodedWhitespace(content); // to make things like &nbsp regular whitespaces
