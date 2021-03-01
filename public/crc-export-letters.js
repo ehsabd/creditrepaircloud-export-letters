@@ -131,34 +131,38 @@
                     success: function (letterContent) {
                         stepCounter++;
                         onProgress(stepCounter/stepsCount*100);
-                        let letterData = parseLetter(letterContent);
-                        letterData.crc_letter_id = id;
-                        letterData.crc_username = document.getElementById('hidden_username').value;
-                        if (extraData){
-                            Object.assign(letterData, extraData);
-                        }
-                        fetchPDFBlob(letterContent).then(blob => {
-                            stepCounter++
-                            onProgress(stepCounter/stepsCount*100);
-                            console.log(`got the blob for lid=${id}, getting blob base64`);
-                            blobToBase64(blob, (base64)=>{
-                                console.log('now sending it to end point : '+ JSON.stringify(letterData));
-                                letterData.file = base64;
-                                sendDataToEndpoint(letterData, (data)=>{
-                                    console.log(data);
-                                    stepCounter++;
-                                    onProgress(stepCounter/stepsCount*100);
-                                    if (stepCounter == stepsCount){
-                                        onComplete();
-                                    }
-                                }, (error)=>{
-                                    onError('Error sending to the endpoint. letterData: '+ JSON.stringify(letterData)+
-                                    ', error:'+ error)
+                        try{
+                            let letterData = parseLetter(letterContent);
+                            letterData.crc_letter_id = id;
+                            letterData.crc_username = document.getElementById('hidden_username').value;
+                            if (extraData){
+                                Object.assign(letterData, extraData);
+                            }
+                            fetchPDFBlob(letterContent).then(blob => {
+                                stepCounter++
+                                onProgress(stepCounter/stepsCount*100);
+                                console.log(`got the blob for lid=${id}, getting blob base64`);
+                                blobToBase64(blob, (base64)=>{
+                                    console.log('now sending it to end point : '+ JSON.stringify(letterData));
+                                    letterData.file = base64;
+                                    sendDataToEndpoint(letterData, (data)=>{
+                                        console.log(data);
+                                        stepCounter++;
+                                        onProgress(stepCounter/stepsCount*100);
+                                        if (stepCounter == stepsCount){
+                                            onComplete();
+                                        }
+                                    }, (error)=>{
+                                        onError('Error sending to the endpoint. letterData: '+ JSON.stringify(letterData)+
+                                        ', error:'+ error)
+                                    });
                                 });
-                            });
-                        })
-                        .catch(() => alert('Failed: we can\'t get the PDF blob'));
-                        
+                            })
+                            .catch(() => alert('Failed: we can\'t get the PDF blob'));
+                            }
+                        catch(error){
+                            onError('Error parsing letter: '+content+'\n'+error);
+                        }
                         hideLoader();
                     }
                 });

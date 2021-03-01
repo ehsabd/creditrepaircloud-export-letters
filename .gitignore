@@ -49,3 +49,4 @@ yarn-error.log*
 *.swp
 *.zip
 .env
+.eslintcache
