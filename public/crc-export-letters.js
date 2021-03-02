@@ -3,6 +3,21 @@
 
 (function () {
 
+    const getSelectedLetters = () => {
+        let selectedLetters = [];
+        const tableRows = document.querySelectorAll('tr.gridrow');
+        for (var i=0;i<tableRows.length;i++){
+            const checkbox = tableRows[i].children[0].querySelector('input');
+            const id = checkbox.value;
+            const isSelected = checkbox.checked;
+            if (isSelected){
+                const clientName = tableRows[i].children[1].innerText.trim();
+                selectedLetters.push({id:id, clientName:clientName});
+            }
+        }
+        return selectedLetters;
+    }
+
     /* Adapted from https://gomakethings.com/serializing-form-data-with-the-vanilla-js-formdata-object/ MIT License*/
     var serializeForm = function (form) {
         var obj = {};
@@ -117,12 +132,13 @@
             round = 1;
         }
 
-        if ($('#hidden_value').val() != '') {
-            showLoader();
-            letterIds = $('#hidden_value').val().split(',');
-            let stepsCount = (letterIds.length)*3;
+        selectedLetters = getSelectedLetters();
+
+        if (selectedLetters.length>0){
+            let stepsCount = (selectedLetters.length)*3;
             let stepCounter = 0;
-            letterIds.forEach((id) => {
+            selectedLetters.forEach((l) => {
+                const id = l.id;
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
                 $.ajax({
                     url: '/everything/preview_letter',
@@ -161,7 +177,7 @@
                             .catch(() => alert('Failed: we can\'t get the PDF blob'));
                             }
                         catch(error){
-                            onError('Error parsing letter: '+content+'\n'+error);
+                            onError('Error parsing letter. Client Name: '+ l.clientName +', Content:'+ +letterContent+'\n'+error);
                         }
                         hideLoader();
                     }
