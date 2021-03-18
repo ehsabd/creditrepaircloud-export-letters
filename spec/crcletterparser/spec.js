@@ -162,11 +162,11 @@ describe("Letter Parser", function () {
       <br />
       Date of Birth: 01/01/1983&nbsp;
       <br />1234 Jibgy Drive AXN 1234
-      <br />Roseville, California 12345
+      <br />Roseville, California,USA
       <br /><br />Transunion&nbsp;
       <br />TransUnion LLC Consumer Dispute Center
       <br /> PO Box 2000
-      <br /> Chester, PA &nbsp;
+      <br /> Chester, PA &nbsp;,USA
       <br />
       <br />
       <br />01/01/2021&nbsp;<br />

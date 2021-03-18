@@ -109,7 +109,7 @@ const parseLetter = (content) => {
             Object.assign(to, fallbackToParsed.value);
             
         }else{
-            console.log('Cannot parse addresses even in fallback mode');
+            throw new Error('Cannot find CityStateZip line')
         }
     }
     return {from:from, to:to, ssn:ssnumber.value};
