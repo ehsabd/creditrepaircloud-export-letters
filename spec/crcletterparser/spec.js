@@ -4,38 +4,73 @@ describe("Letter Parser", function () {
     
     it("Should parse the letter correctly with the standard format", function () {
 
-            content= `<div class="pageBreak" style="page-break-after:always; display: inline-block;">
+        tests = [[`<div class="pageBreak" style="page-break-after:always; display: inline-block;">
             <p>Sample Client <br />
-             1234 Main Street<br />Santa Monica, California 90401<br />
+             1234 Main Street<br />Santa Monica, California 12345<br />
              Date of Birth: 02/14/1963<br />SS#: 1111</p>
             <p>TransUnion LLC Consumer Dispute Center<br /> PO Box 2000<br /> Chester, PA 45678</p>
             <p>01/25/2021</p>
             <p>Re: Letter to Remove Inaccurate Credit Information</p>
             <p>To Whom It May Concern:</p>
-            <p>I received a copy of my credit report and found the following item(s) to be in error:</p>`
-        
-        const output = parseLetter(content);
-        expect(output).toEqual({
-            from: {
-              address_country: 'US',
-              name: 'Sample Client',
-              address_city: 'Santa Monica',
-              address_state: 'California',
-              address_zip: '90401',
-              address_line1: '1234 Main Street'
-            },
-            to: {
-              address_country: 'US',
-              name: 'TransUnion LLC Consumer Dispute Center',
-              address_city: 'Chester',
-              address_state: 'PA',
-              address_zip: '45678',
-              address_line1: 'PO Box 2000'
-            },
-            ssn: ' 1111'
-          });
-    
-
+            <p>I received a copy of my credit report and found the following item(s) to be in error:</p>`,
+            {
+              from: {
+                address_country: 'US',
+                name: 'Sample Client',
+                address_city: 'Santa Monica',
+                address_state: 'California',
+                address_zip: '12345',
+                address_line1: '1234 Main Street'
+              },
+              to: {
+                address_country: 'US',
+                name: 'TransUnion LLC Consumer Dispute Center',
+                address_city: 'Chester',
+                address_state: 'PA',
+                address_zip: '45678',
+                address_line1: 'PO Box 2000'
+              },
+              ssn: ' 1111'
+            }],
+            [`<p>Martin Martinez</p>
+            <p>123 Hammershire Road, Reisterstown, MD, USA</p>
+            <p>Reisterstown, Maryland 12345</p>
+            <p>Date of Birth: 01/01/1990</p>
+            <p>SS#: 2222</p>
+            
+            <p>Experian</p>
+            <p>P.O. Box 4500</p>
+            <p>Allen, TX 45678</p>
+            
+            <p>01/01/2021</p>
+            
+            <p>Re: Letter to Remove Inaccurate Credit Information</p>
+            
+            <p>To Whom It May Concern:</p>`,
+            {
+              from: {
+                address_country: 'US',
+                name: 'Martin Martinez',
+                address_city: 'Reisterstown',
+                address_state: 'Maryland',
+                address_zip: '12345',
+                address_line1: '123 Hammershire Road, Reisterstown, MD, USA'
+              },
+              to: {
+                address_country: 'US',
+                name: 'Experian',
+                address_city: 'Allen',
+                address_state: 'TX',
+                address_zip: '45678',
+                address_line1: 'P.O. Box 4500'
+              },
+              ssn: ' 2222'
+            }
+          ]
+        ]
+        tests.forEach((item)=>{
+          expect(parseLetter(item[0])).toEqual(item[1]);
+        })
 
 
     });
