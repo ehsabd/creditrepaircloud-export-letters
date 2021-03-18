@@ -48,7 +48,7 @@ const parseLetter = (content) => {
 
     const findCityStateZip = (lines) =>{
         for (let i=0;i<lines.length;i++){
-            const m = lines[i].match(/(.*)\s*,\s*([a-zA-Z\s]*)([0-9]*)/);
+            const m = lines[i].match(/(.*)\s*,\s*([a-zA-Z\s]*)([0-9]+)/);
             if (m!=null){
                 console.log(m);
                 return {index:i, value:{address_city : m[1]
