@@ -153,4 +153,28 @@ describe("Letter Parser", function () {
             ssn: ' 1111'
           });
     });
+
+    it("Should raise the error can't find the City,State,Zip line when there is no such line", function () {
+
+      content= `<div class="pageBreak" style="page-break-after:always; display: inline-block;">
+      <p>John Doe
+      <br />SS#: 1111
+      <br />
+      Date of Birth: 01/01/1983&nbsp;
+      <br />1234 Jibgy Drive AXN 1234
+      <br />Roseville, California 12345
+      <br /><br />Transunion&nbsp;
+      <br />TransUnion LLC Consumer Dispute Center
+      <br /> PO Box 2000
+      <br /> Chester, PA &nbsp;
+      <br />
+      <br />
+      <br />01/01/2021&nbsp;<br />
+      <br />
+      <br />To whom it may concern</p>`;
+  
+ 
+  expect(()=>{parseLetter(content)}).toThrow(new Error('Cannot find CityStateZip line'));
+    });
+
 });
