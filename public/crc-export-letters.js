@@ -91,6 +91,9 @@
         <label><input checked="" type="radio" name="include_id_bill" value="1,1"> Round 1 letters only </label>
         <label><input type="radio" name="include_id_bill" value="0,1"> All letters</label>
         <label><input type="radio" name="include_id_bill" value="2,0"> Exclude</label>
+        <div> Format Letter: </div>
+        <label><input type="radio" name="format" value="none">No Formatting</label>
+        <label><input type="radio" name="format" value="LOB" checked="">LOB</label>
         `;
         let endpointFormWrap = document.createElement('div');
         dialog.append(printOptionsForm);
