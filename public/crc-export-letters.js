@@ -88,9 +88,9 @@
         let printOptionsForm = document.createElement('form');
         printOptionsForm.innerHTML = `
         <div>Include photo ID and proof of address (utility bill, insurance bill, etc) documents with:</div>
-        <input checked="" type="radio" name="include_id_bill" value="1,1" id="option1"><label for="option1"> Round 1 letters only </label>
-        <input type="radio" name="include_id_bill" value="0,1" id="option2" ><label for="option2">All letters</label>
-        <input type="radio" name="include_id_bill" value="2,0" id="option3" ><label for="option3">Exclude</label>
+        <label><input checked="" type="radio" name="include_id_bill" value="1,1"> Round 1 letters only </label>
+        <label><input type="radio" name="include_id_bill" value="0,1"> All letters</label>
+        <label><input type="radio" name="include_id_bill" value="2,0"> Exclude</label>
         `;
         let endpointFormWrap = document.createElement('div');
         dialog.append(printOptionsForm);
