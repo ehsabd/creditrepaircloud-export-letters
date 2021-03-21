@@ -65,9 +65,9 @@
         }
 
         const onSubmit = ()=>{
-            const printOptions = printOptionsForm.printOptions.value.split(',');
-            const round = printOptions[0];
-            const doc = printOptions[1];
+            const include_id_bill = printOptionsForm.include_id_bill.value.split(',');
+            const round = include_id_bill[0];
+            const doc = include_id_bill[1];
             const form = endpointFormWrap.querySelector('form');
             if (form!=null){
                 exportLetters(onProgress, onComplete, onError, serializeForm(form), round, doc);
@@ -88,10 +88,9 @@
         let printOptionsForm = document.createElement('form');
         printOptionsForm.innerHTML = `
         <div>Include photo ID and proof of address (utility bill, insurance bill, etc) documents with:</div>
-        <input checked="" type="radio" name="printOptions" value="1,1" id="option1"><label for="option1"> Round 1 letters only </label>
-        <input type="radio" name="printOptions" value="0,1" id="option2" ><label for="option2">All letters</label>
-        <input type="radio" name="printOptions" value="2,0" id="option3" ><label for="option3">Exclude</label>
-    
+        <input checked="" type="radio" name="include_id_bill" value="1,1" id="option1"><label for="option1"> Round 1 letters only </label>
+        <input type="radio" name="include_id_bill" value="0,1" id="option2" ><label for="option2">All letters</label>
+        <input type="radio" name="include_id_bill" value="2,0" id="option3" ><label for="option3">Exclude</label>
         `;
         let endpointFormWrap = document.createElement('div');
         dialog.append(printOptionsForm);
