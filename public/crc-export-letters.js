@@ -156,6 +156,7 @@
                             if (extraData){
                                 Object.assign(letterData, extraData);
                             }
+                            //TODO format letterContent here
                             fetchPDFBlob(letterContent).then(blob => {
                                 stepCounter++
                                 onProgress(stepCounter/stepsCount*100);
