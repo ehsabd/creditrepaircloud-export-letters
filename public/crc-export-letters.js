@@ -93,7 +93,7 @@
         <label><input type="radio" name="include_id_bill" value="2,0"> Exclude</label>
         <div> Format Letter: </div>
         <label><input type="radio" name="format" value="none">No Formatting</label>
-        <label><input type="radio" name="format" value="LOB" checked="">LOB</label>
+        <label><input type="radio" name="format" value="lob" checked="">LOB</label>
         `;
         let endpointFormWrap = document.createElement('div');
         dialog.append(printOptionsForm);
