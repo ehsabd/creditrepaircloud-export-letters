@@ -1,3 +1,4 @@
+const formatLetter = require("./crc-letter-formatter");
 
 
 
@@ -66,13 +67,14 @@
 
         const onSubmit = ()=>{
             const include_id_bill = printOptionsForm.include_id_bill.value.split(',');
+            const format = printOptionsForm.format.value;
             const round = include_id_bill[0];
             const doc = include_id_bill[1];
             const form = endpointFormWrap.querySelector('form');
             if (form!=null){
-                exportLetters(onProgress, onComplete, onError, serializeForm(form), round, doc);
+                exportLetters(onProgress, onComplete, onError, serializeForm(form), round, doc, format);
             }else{
-                exportLetters(onProgress, onComplete, onError, null , round, doc);
+                exportLetters(onProgress, onComplete, onError, null , round, doc, format);
             }   
             submitBtn.remove();
             endpointFormWrap.remove();
@@ -124,7 +126,7 @@
         
     }
 
-    const exportLetters = (onProgress, onComplete, onError, extraData , round, withDoc) => {
+    const exportLetters = (onProgress, onComplete, onError, extraData , round, withDoc, format) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
@@ -156,7 +158,7 @@
                             if (extraData){
                                 Object.assign(letterData, extraData);
                             }
-                            //TODO format letterContent here
+                            letterContent = formatLetter(letterContent, format);
                             fetchPDFBlob(letterContent).then(blob => {
                                 stepCounter++
                                 onProgress(stepCounter/stepsCount*100);
