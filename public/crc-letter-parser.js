@@ -22,7 +22,7 @@ const parseLetter = (content) => {
 
     const findDob = (lines) => {
         for (var i = 0; i < lines.length; i++) {
-            let m = lines[i].match(/^\s*(dob|date\s*of\s*birth)\s*:(.*)$/i) 
+            let m = lines[i].match(/^\s*(dob|date\s*of\s*birth)\s*:\s*(.*)$/i) 
             if (m!=null){
                 return {value:m[2], index: i };
             }
@@ -112,7 +112,7 @@ const parseLetter = (content) => {
             throw new Error('Cannot find CityStateZip line')
         }
     }
-    return {from:from, to:to, ssn:ssnumber.value};
+    return {from:from, to:to, ssn:ssnumber.value, dob:dob.value};
 }
 
 module.exports = parseLetter;
