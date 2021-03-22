@@ -7,7 +7,7 @@ describe("Letter Parser", function () {
         tests = [[`<div class="pageBreak" style="page-break-after:always; display: inline-block;">
             <p>Sample Client <br />
              1234 Main Street<br />Santa Monica, California 12345<br />
-             Date of Birth: 02/14/1963<br />SS#: 1111</p>
+             Date of Birth: 01/01/1963<br />SS#: 1111</p>
             <p>TransUnion LLC Consumer Dispute Center<br /> PO Box 2000<br /> Chester, PA 45678</p>
             <p>01/25/2021</p>
             <p>Re: Letter to Remove Inaccurate Credit Information</p>
@@ -30,7 +30,8 @@ describe("Letter Parser", function () {
                 address_zip: '45678',
                 address_line1: 'PO Box 2000'
               },
-              ssn: ' 1111'
+              ssn: ' 1111',
+              dob: '01/01/1963'
             }],
             [`<p>Martin Martinez</p>
             <p>123 Hammershire Road, Reisterstown, MD, USA</p>
@@ -64,7 +65,8 @@ describe("Letter Parser", function () {
                 address_zip: '45678',
                 address_line1: 'P.O. Box 4500'
               },
-              ssn: ' 2222'
+              ssn: ' 2222',
+              dob: '01/01/1990'
             }
           ]
         ]
@@ -80,7 +82,7 @@ describe("Letter Parser", function () {
             content = `<p>Sample Client</p>
             <p>1111 McKinnon Avenue APT 3333</p>
             <p> San Francisco, California 23456</p>
-            <p> Date of Birth: ---</p>
+            <p> Date of Birth: 01/01/1963</p>
             <p> SS#: 1113</p>
             <p> Dest Name2</p>
             <p> PO Box 2000</p>
@@ -107,7 +109,8 @@ describe("Letter Parser", function () {
               address_zip: '12345',
               address_line1: 'PO Box 2000'
             },
-            ssn: ' 1113'
+            ssn: ' 1113',
+            dob: '01/01/1963'
           });
     });
 
@@ -117,7 +120,7 @@ describe("Letter Parser", function () {
             <p>1111 McKinnon Avenue APT 3333</p>
             <p> San Francisco, California 23456</p>
             <p> SS#: 1113</p>
-            <p> Date of Birth: ---</p>
+            <p> Date of Birth: 01/01/1963</p>
             <p> Dest Name2</p>
             <p> PO Box 2000</p>
             <p> Chester, PA 12345</p>
@@ -143,7 +146,8 @@ describe("Letter Parser", function () {
               address_zip: '12345',
               address_line1:'PO Box 2000'
             },
-            ssn: ' 1113'
+            ssn: ' 1113',
+            dob:'01/01/1963'
           });
     });
 
@@ -185,7 +189,8 @@ describe("Letter Parser", function () {
               address_line1: 'TransUnion LLC Consumer Dispute Center',
               address_line2: 'PO Box 2000'
             },
-            ssn: ' 1111'
+            ssn: ' 1111',
+            dob: '01/01/1983'
           });
     });
 
