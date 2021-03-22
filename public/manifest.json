@@ -11,7 +11,7 @@
       "js": [
         "jquery.min.js",
         "crc-letter-parser.js",
-        "crc-letter-formatter",
+        "crc-letter-formatter.js",
         "crc-export-letters.js"
       ]
     }
