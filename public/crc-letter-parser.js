@@ -115,4 +115,4 @@ const parseLetter = (content) => {
     return {from:from, to:to, ssn:ssnumber.value, dob:dob.value};
 }
 
-module.exports = parseLetter;
+if (typeof module !=='undefined') module.exports = parseLetter;

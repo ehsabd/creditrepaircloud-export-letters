@@ -1,6 +1,8 @@
+const { globalAgent } = require('http');
+
 describe("Letter Formatter", () => {
+    global.parseLetter =  require('../../public/crc-letter-parser'); //load into global to emulate content scripts on browser
     const formatLetter = require('../../public/crc-letter-formatter');
-    const parseLetter =  require('../../public/crc-letter-parser');
     it("Should return the content when format is none",  () => {
 
         const content = 'Example Content';

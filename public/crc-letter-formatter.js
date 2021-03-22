@@ -4,9 +4,6 @@ const findIndexOfLetterDate = (content) => {
 }
 
 const formatLetter = (content, format) => {
-    if (typeof parseLetter === 'undefined') {
-        var parseLetter = require('./crc-letter-parser');
-    }
     if (format === 'lob'){
         const parsedLetter = parseLetter(content);
         const letterDateIndex = findIndexOfLetterDate(content);
