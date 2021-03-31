@@ -12,7 +12,9 @@
             const isSelected = checkbox.checked;
             if (isSelected){
                 const clientName = tableRows[i].children[1].innerText.trim();
-                selectedLetters.push({id:id, clientName:clientName});
+                let editLink = tableRows[i].querySelector("[title='edit']").cloneNode(true);
+                editLink.setAttribute('target','_blank');
+                selectedLetters.push({id:id, clientName:clientName, editLink:editLink.outerHTML});
             }
         }
         return selectedLetters;
@@ -64,7 +66,8 @@
             dialog.append(errorAlert);       
         }
 
-        const onReport = (letterData, status) => {
+        const onReport = (letter) => {
+            const {letterData, status, editLink} = letter;
             reportTableBody.innerHTML+=`
             <tr>
                 <td>${letterData.crc_letter_id}</td>
@@ -72,6 +75,7 @@
                 <td>${letterData.from ? letterData.from.name : '' }</td>
                 <td>${letterData.ssn}</td>
                 <td>${letterData.dob}</td>
+                <td>${editLink}</td>
             </tr>`
         }
 
@@ -160,10 +164,11 @@
             let stepCounter = 0;
             selectedLetters.forEach((l) => {
                 const id = l.id;
-                let letterData = { 
+                l.letterData = { 
                     crc_letter_id : id,
                     crc_username : document.getElementById('hidden_username').value
                 }
+                let letterData = l.letterData;
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
                 $.ajax({
                     url: '/everything/preview_letter',
@@ -186,25 +191,28 @@
                                     console.log('now sending it to end point : '+ JSON.stringify(letterData));
                                     letterData.file = base64;
                                     sendDataToEndpoint(letterData, (data)=>{
+                                        l.status = 'Success';
                                         console.log(data);
                                         stepCounter++;
                                         onProgress(stepCounter/stepsCount*100);
-                                        onReport(letterData, 'Success');
+                                        onReport(l);
                                         if (stepCounter == stepsCount){
                                             onComplete();
                                         }
                                     }, (error)=>{
+                                        l.status = 'Failure';
                                         onError('Error sending to the endpoint. letterData: '+ JSON.stringify(letterData)+
                                         ', error:'+ error);
-                                        onReport(letterData, 'Failure')
+                                        onReport(l)
                                     });
                                 });
                             })
                             .catch(() => alert('Failed: we can\'t get the PDF blob'));
                             }
                         catch(error){
+                            l.status = 'Failure';
                             onError('Error parsing letter. Client Name: '+ l.clientName +', Content:'+ letterContent+'\n'+error);
-                            onReport(letterData, 'Failure')
+                            onReport(l)
                         }
                         hideLoader();
                     }
