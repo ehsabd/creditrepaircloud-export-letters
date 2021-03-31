@@ -99,7 +99,7 @@
         let overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;background:rgba(0,0,0,.2);left:0;top:0;right:0;bottom:0;z-index:1000';
         let dialog = document.createElement('div');
-        dialog.style.cssText = 'position:fixed; width:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
+        dialog.style.cssText = 'position:fixed; max:500px;top:50%;left:50%;transform:translate(-50%,-50%);background:white;z-index:2000;font-size:14px;border-radius: 5px;box-shadow: #003 0px 0px 100px 0px;padding:20px;';
         overlay.appendChild(dialog);
         let printOptionsForm = document.createElement('form');
         printOptionsForm.innerHTML = `
