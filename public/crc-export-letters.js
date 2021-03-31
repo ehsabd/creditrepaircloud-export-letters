@@ -59,13 +59,20 @@
         }
 
         const onError = (error) => {
-            let errorAlert = document.createElement('div');
+            let errorAlert = document.createElement('textarea');
             errorAlert.innerText = error;
             dialog.append(errorAlert);       
         }
 
-        const onReport = (letterData) => {
-            //TODO add report to the dialog, probably as a row of a table
+        const onReport = (letterData, status) => {
+            reportTableBody.innerHTML+=`
+            <tr>
+                <td>${letterData.crc_letter_id}</td>
+                <td>${status}</td>
+                <td>${letterData.from ? letterData.from.name : '' }</td>
+                <td>${letterData.ssn}</td>
+                <td>${letterData.dob}</td>
+            </tr>`
         }
 
         const onSubmit = ()=>{
@@ -115,7 +122,13 @@
         buttons.append(submitBtn,closeBtn);
         let progressBar = document.createElement('div');
         progressBar.style.cssText = 'height:4px; margin-top:20px; border-radius:2px;'
-
+        let reportTable = document.createElement('table');
+        reportTable.innerHTML=`
+        <thead>
+            <th>ID</th><th>Status</th><th>Client Name</th><th>SSN</th><th>DOB</th>
+        </thead>`;
+        reportTableBody = document.createElement('tbody');
+        reportTable.append(reportTableBody);
         getExportEndpointUrl((exportEndpointUrl)=>{
             fetch(exportEndpointUrl).then((resp)=>resp.text()).then((data)=>{
                 endpointFormWrap.innerHTML += data;
@@ -123,7 +136,8 @@
             .finally(()=>{
                 message.innerText = '';
                 dialog.appendChild(buttons);
-                dialog.append(progressBar)
+                dialog.append(progressBar);
+                dialog.append(reportTable);
             });
         })
         
@@ -146,6 +160,10 @@
             let stepCounter = 0;
             selectedLetters.forEach((l) => {
                 const id = l.id;
+                let letterData = { 
+                    crc_letter_id : id,
+                    crc_username : document.getElementById('hidden_username').value
+                }
                 var datastring = "lid=" + id + "&doc=" + withDoc + "&round=" + round;
                 $.ajax({
                     url: '/everything/preview_letter',
@@ -155,9 +173,7 @@
                         stepCounter++;
                         onProgress(stepCounter/stepsCount*100);
                         try{
-                            let letterData = parseLetter(letterContent);
-                            letterData.crc_letter_id = id;
-                            letterData.crc_username = document.getElementById('hidden_username').value;
+                            Object.assign(letterData, parseLetter(letterContent));
                             if (extraData){
                                 Object.assign(letterData, extraData);
                             }
@@ -173,19 +189,22 @@
                                         console.log(data);
                                         stepCounter++;
                                         onProgress(stepCounter/stepsCount*100);
+                                        onReport(letterData, 'Success');
                                         if (stepCounter == stepsCount){
                                             onComplete();
                                         }
                                     }, (error)=>{
                                         onError('Error sending to the endpoint. letterData: '+ JSON.stringify(letterData)+
-                                        ', error:'+ error)
+                                        ', error:'+ error);
+                                        onReport(letterData, 'Failure')
                                     });
                                 });
                             })
                             .catch(() => alert('Failed: we can\'t get the PDF blob'));
                             }
                         catch(error){
-                            onError('Error parsing letter. Client Name: '+ l.clientName +', Content:'+ +letterContent+'\n'+error);
+                            onError('Error parsing letter. Client Name: '+ l.clientName +', Content:'+ letterContent+'\n'+error);
+                            onReport(letterData, 'Failure')
                         }
                         hideLoader();
                     }
