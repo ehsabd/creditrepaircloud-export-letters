@@ -64,6 +64,10 @@
             dialog.append(errorAlert);       
         }
 
+        const onReport = (letterData) => {
+            //TODO add report to the dialog, probably as a row of a table
+        }
+
         const onSubmit = ()=>{
             const include_id_bill = printOptionsForm.include_id_bill.value.split(',');
             const format = printOptionsForm.format.value;
@@ -71,9 +75,9 @@
             const doc = include_id_bill[1];
             const form = endpointFormWrap.querySelector('form');
             if (form!=null){
-                exportLetters(onProgress, onComplete, onError, serializeForm(form), round, doc, format);
+                exportLetters(onProgress, onReport, onComplete, onError, serializeForm(form), round, doc, format);
             }else{
-                exportLetters(onProgress, onComplete, onError, null , round, doc, format);
+                exportLetters(onProgress, onReport, onComplete, onError, null , round, doc, format);
             }   
             submitBtn.remove();
             endpointFormWrap.remove();
@@ -125,7 +129,7 @@
         
     }
 
-    const exportLetters = (onProgress, onComplete, onError, extraData , round, withDoc, format) => {
+    const exportLetters = (onProgress, onReport, onComplete, onError, extraData , round, withDoc, format) => {
 
         if (withDoc === undefined) {
             withDoc = 0;
