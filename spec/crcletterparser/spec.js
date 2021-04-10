@@ -68,7 +68,29 @@ describe("Letter Parser", function () {
               ssn: ' 2222',
               dob: '01/01/1990'
             }
-          ]
+          ],
+          ['<div class="pageBreak" style="page-break-after:always; display: inline-block;">        <p>John Doe<br />1111 Bamargosa Thrive<br />Antioch, California 12345<br />Date of Birth: 01/23/1980<br />SS#: 2222</p><p>CAPITAL ONE<br />4567 Capital One Dr<br />McLean, VA 45678</p><p>01/01/2021</p><p>ATTN: John J. Doe <br />(123) 456-7890<br />johnjdoedoe@capitalone.com</p><p>Regarding: Account No:&nbsp;<span>1111111<br /></span></p><p>To Whom It May Concern:</p>',
+        
+          {
+            from: {
+              address_country: 'US',
+              name: 'John Doe',
+              address_city: 'Antioch',
+              address_state: 'California',
+              address_zip: '12345',
+              address_line1: '1111 Bamargosa Thrive'
+            },
+            to: {
+              address_country: 'US',
+              name: 'CAPITAL ONE',
+              address_city: 'McLean',
+              address_state: 'VA',
+              address_zip: '45678',
+              address_line1: '4567 Capital One Dr'
+            },
+            ssn: ' 2222',
+            dob: '01/23/1980'
+          }]
         ]
         tests.forEach((item)=>{
           expect(parseLetter(item[0])).toEqual(item[1]);
@@ -215,6 +237,14 @@ describe("Letter Parser", function () {
   
  
   expect(()=>{parseLetter(content)}).toThrow(new Error('Cannot find CityStateZip line'));
+    });
+
+    it("Should raise the error can't find the Letter Date when it can't find such line", function () {
+
+      content= `<div class="pageBreak" style="page-break-after:always; display: inline-block;">        <p>John Doe<br />1111 Bamargosa Thrive<br />Antioch, California 12345<br />Date of Birth: 01/23/1980<br />SS#: 2222</p><p>CAPITAL ONE<br />4567 Capital One Dr<br />McLean, VA 45678</p><p>01//01/2021</p><p>ATTN: John J. Doe <br />(123) 456-7890<br />johnjdoedoe@capitalone.com</p><p>Regarding: Account No:&nbsp;<span>1111111<br /></span></p><p>To Whom It May Concern:</p>`;
+  
+ 
+  expect(()=>{parseLetter(content)}).toThrow(new Error('Cannot find Letter Date'));
     });
 
 });
