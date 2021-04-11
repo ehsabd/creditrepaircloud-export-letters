@@ -1,6 +1,10 @@
 const findIndexOfLetterDate = (content) => {
     const dateregex = /(<br \/>|<p>)\s*[0-9]+\/[0-9]+\/[0-9]{4}/;
-    return content.match(dateregex).index;
+    m = content.match(dateregex)
+    if (m == null){
+        throw new Error('Cannot find LetterDate')
+    }
+    return m.index;
 }
 
 const formatLetter = (content, format) => {
