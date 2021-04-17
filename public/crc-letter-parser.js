@@ -94,6 +94,9 @@ const parseLetter = (content) => {
     if (fromParsed){
         Object.assign(from, fromParsed.value);
         const letterDate = findLetterDate(lines, afterdobssnumberindex);
+        if (!letterDate){
+            throw new Error('Cannot find Letter Date');
+        }
         to.name = lines[afterdobssnumberindex]
         const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
         console.log(toAddressLines);
