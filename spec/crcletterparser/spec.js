@@ -173,6 +173,41 @@ describe("Letter Parser", function () {
           });
     });
 
+    it("Should parse the letter correctly when there is no Date of Birth", function () {
+
+      content = `<p>Sample Client</p>
+      <p>1111 McKinnon Avenue APT 3333</p>
+      <p> San Francisco, California 23456</p>
+      <p> SS#: 1113</p>
+      <p> Dest Name2</p>
+      <p> PO Box 2000</p>
+      <p> Chester, PA 12345</p>
+      <p> Attn: Fraud Department</p>
+      <p> 01/01/2021</p>
+      <p> <span> To Whom It May Concern,</span></p>`;
+
+      const output = parseLetter(content);
+      expect(output).toEqual({
+          from: {
+            address_country: 'US',
+            name: 'Sample Client',
+            address_city: 'San Francisco',
+            address_state: 'California',
+            address_zip: '23456',
+            address_line1:'1111 McKinnon Avenue APT 3333'
+          },
+          to: {
+            address_country: 'US',
+            name: 'Dest Name2',
+            address_city: 'Chester',
+            address_state: 'PA',
+            address_zip: '12345',
+            address_line1:'PO Box 2000'
+          },
+          ssn: ' 1113'
+        });
+    });
+
     it("Should parse the letter correctly when the SS# comes before Date of Birth and both addresses after Date of Birth", function () {
 
             content= `<div class="pageBreak" style="page-break-after:always; display: inline-block;">
