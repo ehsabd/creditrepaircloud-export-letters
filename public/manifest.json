@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "CreditRepairCloud Export Letters",
-  "version": "0.3.8",
+  "version": "0.3.10",
   "description": "A chrome extension that adds an export button to creditrepaircloud print letters page",
   "content_scripts": [
     {

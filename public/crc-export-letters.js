@@ -6,16 +6,18 @@
     const getSelectedLetters = () => {
         let selectedLetters = [];
         const tableRows = document.querySelectorAll('tr.gridrow');
-        console.log(tableRows.innerHTML);
         for (var i=0;i<tableRows.length;i++){
+            console.log(tableRows[i].innerHTML);
             const checkbox = tableRows[i].children[0].querySelector('input');
-            const id = checkbox.value;
-            const isSelected = checkbox.checked;
-            if (isSelected){
-                const clientName = tableRows[i].children[1].innerText.trim();
-                let editLink = tableRows[i].querySelector("[title='edit']").cloneNode(true);
-                editLink.setAttribute('target','_blank');
-                selectedLetters.push({id:id, clientName:clientName, editLink:editLink.outerHTML});
+            if (checkbox){
+                const id = checkbox.value;
+                const isSelected = checkbox.checked;
+                if (isSelected){
+                    const clientName = tableRows[i].children[1].innerText.trim();
+                    let editLink = tableRows[i].querySelector("[title='edit']").cloneNode(true);
+                    editLink.setAttribute('target','_blank');
+                    selectedLetters.push({id:id, clientName:clientName, editLink:editLink.outerHTML});
+                }
             }
         }
         return selectedLetters;
