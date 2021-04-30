@@ -6,6 +6,7 @@
     const getSelectedLetters = () => {
         let selectedLetters = [];
         const tableRows = document.querySelectorAll('tr.gridrow');
+        console.log(tableRows.innerHTML);
         for (var i=0;i<tableRows.length;i++){
             const checkbox = tableRows[i].children[0].querySelector('input');
             const id = checkbox.value;
@@ -276,8 +277,6 @@
 
     const grayBtnBigs = Array.from(document.querySelectorAll('.gray-btn-big'));
     const printBtn = grayBtnBigs.filter((item) => {
-        console.log(item);
-        console.log(item.innerHTML);
         const itemInnerHTML = item.innerHTML.toLowerCase();
         return itemInnerHTML.includes('print selected letters') || itemInnerHTML.includes('previewletterwithdoc')
     });
