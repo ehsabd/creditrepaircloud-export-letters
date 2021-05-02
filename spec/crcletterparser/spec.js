@@ -30,7 +30,7 @@ describe("Letter Parser", function () {
                 address_zip: '45678',
                 address_line1: 'PO Box 2000'
               },
-              ssn: ' 1111',
+              ssn: '1111',
               dob: '01/01/1963'
             }],
             [`<p>Martin Martinez</p>
@@ -65,7 +65,7 @@ describe("Letter Parser", function () {
                 address_zip: '45678',
                 address_line1: 'P.O. Box 4500'
               },
-              ssn: ' 2222',
+              ssn: '2222',
               dob: '01/01/1990'
             }
           ],
@@ -88,7 +88,7 @@ describe("Letter Parser", function () {
               address_zip: '45678',
               address_line1: '4567 Capital One Dr'
             },
-            ssn: ' 2222',
+            ssn: '2222',
             dob: '01/23/1980'
           }]
         ]
@@ -131,7 +131,7 @@ describe("Letter Parser", function () {
               address_zip: '12345',
               address_line1: 'PO Box 2000'
             },
-            ssn: ' 1113',
+            ssn: '1113',
             dob: '01/01/1963'
           });
     });
@@ -168,7 +168,7 @@ describe("Letter Parser", function () {
               address_zip: '12345',
               address_line1:'PO Box 2000'
             },
-            ssn: ' 1113',
+            ssn: '1113',
             dob:'01/01/1963'
           });
     });
@@ -204,7 +204,7 @@ describe("Letter Parser", function () {
             address_zip: '12345',
             address_line1:'PO Box 2000'
           },
-          ssn: ' 1113'
+          ssn: '1113'
         });
     });
 
@@ -246,7 +246,7 @@ describe("Letter Parser", function () {
               address_line1: 'TransUnion LLC Consumer Dispute Center',
               address_line2: 'PO Box 2000'
             },
-            ssn: ' 1111',
+            ssn: '1111',
             dob: '01/01/1983'
           });
     });
