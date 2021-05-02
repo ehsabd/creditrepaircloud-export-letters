@@ -33,7 +33,7 @@ const parseLetter = (content) => {
         for (var i = 0; i < lines.length; i++) {
             let m = lines[i].match(/^[^0-9]+:([0-9\s]+)$/) 
             if (m!=null){
-                return {value:m[1], index: i };
+                return {value:m[1].trim(), index: i };
             }
         }
     }
