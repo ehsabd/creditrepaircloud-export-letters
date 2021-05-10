@@ -91,16 +91,20 @@ const parseLetter = (content) => {
     const fromAddressLines = lines.slice(1, dob.index);
     console.log(fromAddressLines);
     const fromParsed = parseAddress(fromAddressLines);
+    let toParsed = null;
     if (fromParsed){
-        Object.assign(from, fromParsed.value);
         const letterDate = findLetterDate(lines, afterdobssnumberindex);
         if (!letterDate){
             throw new Error('Cannot find Letter Date');
         }
-        to.name = lines[afterdobssnumberindex]
         const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
         console.log(toAddressLines);
-        Object.assign(to, parseAddress(toAddressLines).value);    
+        toParsed = parseAddress(toAddressLines);
+    }
+    if (fromParsed && toParsed){
+        Object.assign(from, fromParsed.value);
+        to.name = lines[afterdobssnumberindex]
+        Object.assign(to, toParsed.value); 
     }else{ //Fallback mode, both addresses come after DOB/SS# 
         fallbackAddressLines = lines.slice(afterdobssnumberindex);
         const fallbackParsed = parseAddress(fallbackAddressLines);
