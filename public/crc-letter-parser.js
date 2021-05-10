@@ -104,15 +104,15 @@ const parseLetter = (content) => {
     }else{ //Fallback mode, both addresses come after DOB/SS# 
         fallbackAddressLines = lines.slice(afterdobssnumberindex);
         const fallbackParsed = parseAddress(fallbackAddressLines);
+        let fallbackToParsed = null;
         if (fallbackParsed){
+            fallbackToAddressLines = fallbackAddressLines.slice(fallbackParsed.stopIndex+2);
+            fallbackToParsed = parseAddress(fallbackToAddressLines)
+        }
+        if (fallbackParsed && fallbackToParsed){
             Object.assign(from, fallbackParsed.value);
             to.name = fallbackAddressLines[fallbackParsed.stopIndex+1];
-            fallbackToAddressLines = fallbackAddressLines.slice(fallbackParsed.stopIndex+2);
-            const fallbackToParsed = parseAddress(fallbackToAddressLines)
             Object.assign(to, fallbackToParsed.value);
-            
-        }else{
-            throw new Error('Cannot find CityStateZip line')
         }
     }
     return {from:from, to:to, ssn:ssnumber.value, dob:dob.value};
