@@ -260,7 +260,7 @@ describe("Letter Parser", function () {
   expect(()=>{parseLetter(content)}).toThrow(new Error('Cannot find Letter Date'));
     });
 
-    it("Should return empty sender address when the address is entered in a non-supported format", function () {
+    it("Should return empty sender address when the sender address is entered in a non-supported format", function () {
 
       content = `<p>Sample Client</p>
       <p>1111 McKinnon-Avenue APT 3333</p>
