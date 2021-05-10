@@ -277,19 +277,10 @@ describe("Letter Parser", function () {
   expect(output).toEqual({
       from: {
         address_country: 'US',
-        name: 'Sample Client',
-        address_city: undefined,
-        address_state: undefined,
-        address_zip: undefined,
-        address_line1: undefined       
+        name: 'Sample Client',       
       },
       to: {
         address_country: 'US',
-        name: 'Dest Name2',
-        address_city: 'Chester',
-        address_state: 'PA',
-        address_zip: '12345',
-        address_line1: 'PO Box 2000'
       },
       ssn: '1113',
       dob: '01/01/1963'
