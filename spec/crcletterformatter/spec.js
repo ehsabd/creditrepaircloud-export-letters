@@ -28,6 +28,23 @@ describe("Letter Formatter", () => {
        <p>Re: Letter to Remove Inaccurate Credit Information</p>
        <p>To Whom It May Concern:</p>
        <p>I received a copy of my credit report and found the following item(s) to be in error:</p>`
+    ], [
+        `<p>Sample Client <br />
+        1234 Main Street<br />Santa Monica-California 12345<br />
+        Date of Birth: 02/14/1963<br />SS#: 1111</p>
+       <p>TransUnion LLC Consumer Dispute Center<br /> PO Box 2000<br /> Chester-PA 45678</p>
+       <p>01/25/2021</p>
+       <p>Re: Letter to Remove Inaccurate Credit Information</p>
+       <p>To Whom It May Concern:</p>
+       <p>I received a copy of my credit report and found the following item(s) to be in error:</p>`,
+       `<p>Sample Client <br />
+        1234 Main Street<br />Santa Monica-California 12345<br />
+        Date of Birth: 02/14/1963<br />SS#: 1111</p>
+       <p>TransUnion LLC Consumer Dispute Center<br /> PO Box 2000<br /> Chester-PA 45678</p>
+       <p>Date of Birth: 02/14/1963<br />SS#: 1111</p><p>01/25/2021</p>
+       <p>Re: Letter to Remove Inaccurate Credit Information</p>
+       <p>To Whom It May Concern:</p>
+       <p>I received a copy of my credit report and found the following item(s) to be in error:</p>`
     ]];
 
         tests.forEach((item)=>{
