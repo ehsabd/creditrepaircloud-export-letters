@@ -78,7 +78,7 @@ const parseLetter = (content) => {
     const delimiterRegex = /(<p>|<br[^>]*>|<\/p>)/g;
     let lines = content
         .split(delimiterRegex)
-        .map((l) => l.replace(delimiterRegex, '').replace(/<[/]*div[^>]*>/g, '').trim())
+        .map((l) => l.replace(delimiterRegex, '').replace(/<[/]*div[^>]*>|<[/]*span[^>]*>/g, '').trim())
         .filter((l) => l.length > 0);
     console.log(JSON.stringify(lines))
     // parse letter content (sender, receiver , etc.)
