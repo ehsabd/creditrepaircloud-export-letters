@@ -289,7 +289,7 @@ describe("Letter Parser", function () {
 
   it("Should return empty addresses when the destination address is entered in a non-supported format", function () {
 
-      content = `<p>Sample Client</p>
+    const tests = [[`<p>Sample Client</p>
       <p>1111 McKinnon Avenue APT 3333</p>
       <p> San Francisco, California 23456</p>
       <p> Date of Birth: 01/01/1963</p>
@@ -298,20 +298,35 @@ describe("Letter Parser", function () {
       <p> PO Box2000</p>
       <p> Chester-PA-12345</p>
       <p> 01/01/2021</p>
-      <p> <span> To Whom It May Concern,</span></p>`;
-
-  const output = parseLetter(content);
-  expect(output).toEqual({
-      from: {
-        address_country: 'US',
-        name: 'Sample Client',       
-      },
-      to: {
-        address_country: 'US',
-      },
-      ssn: '1113',
-      dob: '01/01/1963'
-    });
+      <p> <span> To Whom It May Concern,</span></p>`,{
+        from: {
+          address_country: 'US',
+          name: 'Sample Client',       
+        },
+        to: {
+          address_country: 'US',
+        },
+        ssn: '1113',
+        dob: '01/01/1963'
+      }],
+      [`<div class="pageBreak" style="page-break-after:always; display: inline-block;">        <p>Sample Client <br /> 1234 Main Street<br />Santa Monica, California 12345&nbsp;</p><p><br />&nbsp;</p><p>To: Judgment Creditor, &nbsp;</p><p>From: Judgment Debtor, Sample Client &nbsp;</p><p>Case number:&nbsp; (CASE NUMBER)&nbsp;</p><p>Judgment amount:&nbsp; (AMOUNT)&nbsp;</p><p>Date: 03/23/2021&nbsp;</p><p>Dear Sir,&nbsp;&nbsp;</p>`,
+        {
+          from: {
+            address_country: 'US',
+            name: 'Sample Client',       
+          },
+          to: {
+            address_country: 'US',
+          },
+          ssn: '1113',
+          dob: '01/01/1963'
+        }  
+      ]
+    ];
+  tests.forEach(test => {
+    const output = parseLetter(test[0]);
+    expect(output).toEqual(test[1])  
   });
+})
 
 });
