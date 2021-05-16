@@ -2,12 +2,15 @@
 
 
 (function () {
+    
+    let clientsData = [];
+    let destinationsData = [];
 
     const getSelectedLetters = () => {
         let selectedLetters = [];
         const tableRows = document.querySelectorAll('tr.gridrow');
         for (var i=0;i<tableRows.length;i++){
-            console.log(tableRows[i].innerHTML);
+            //console.log(tableRows[i].innerHTML);
             const checkbox = tableRows[i].children[0].querySelector('input');
             if (checkbox){
                 const id = checkbox.value;
@@ -16,7 +19,7 @@
                     const clientName = tableRows[i].children[1].innerText.trim();
                     let editLink = tableRows[i].querySelector("[title='edit']").cloneNode(true);
                     editLink.setAttribute('target','_blank');
-                    selectedLetters.push({id:id, clientName:clientName, editLink:editLink.outerHTML});
+                    selectedLetters.push({id:id, clientName:clientName, title: editLink.innerText.trim() ,  editLink:editLink.outerHTML});
                 }
             }
         }
@@ -138,7 +141,15 @@
         reportTable.append(reportTableBody);
         getExportEndpointUrl((exportEndpointUrl)=>{
             fetch(exportEndpointUrl).then((resp)=>resp.text()).then((data)=>{
-                endpointFormWrap.innerHTML += data;
+                try {
+                    const parsedData = JSON.parse(data);
+                    endpointFormWrap.innerHTML +=parsedData.form;
+                    destinationsData = parsedData.destinationsData || {};
+                } catch (e) { //fallback to form
+                    destinationsData = {};
+                    endpointFormWrap.innerHTML += data;
+                }
+                
             })
             .finally(()=>{
                 message.innerText = '';
@@ -146,6 +157,10 @@
                 dialog.append(progressBar);
                 dialog.append(reportTable);
             });
+        })
+
+        getClientsData(data=>{
+            clientsData = data;
         })
         
     }
@@ -181,7 +196,34 @@
                         stepCounter++;
                         onProgress(stepCounter/stepsCount*100);
                         try{
-                            Object.assign(letterData, parseLetter(letterContent));
+                             
+                            Object.assign(letterData, parseLetter(letterContent)); 
+                            const cData = getClientBySSN(letterData.ssn);
+                            //TODO send appropriate error if cData is undefined
+                            if (cData.Address){
+                                letterData.from.address_line1 = cData.Address;
+                                letterData.from.address_line2 = undefined;
+                            }
+                            if (cData.City){
+                                letterData.from.address_city = cData.City;
+                            }
+                            if (cData.State){
+                                letterData.from.address_state = cData.State;
+                            }
+                            if (cData.Zip){
+                                letterData.from.address_zip = cData.Zip;
+                            }
+                            
+                            const destination = findDestinationByTitle(l.title);
+                            
+                            if (destination[0]) letterData.to.name = destination[0] || letterData.to.name;
+                            if (destination[1]) letterData.to.address_line1 = destination[1];
+                            if (destination[2]) letterData.to.address_line2 = destination[2];
+                            if (destination[3]) letterData.to.address_city = destination[3];
+                            if (destination[4]) letterData.to.address_state = destination[4];
+                            if (destination[5]) letterData.to.address_zip = destination[5];
+
+
                             if (extraData){
                                 Object.assign(letterData, extraData);
                             }
@@ -191,7 +233,7 @@
                                 onProgress(stepCounter/stepsCount*100);
                                 console.log(`got the blob for lid=${id}, getting blob base64`);
                                 blobToBase64(blob, (base64)=>{
-                                    console.log('now sending it to end point : '+ JSON.stringify(letterData));
+                                    //console.log('now sending it to end point : '+ JSON.stringify(letterData));
                                     letterData.file = base64;
                                     sendDataToEndpoint(letterData, (data)=>{
                                         l.status = 'Success';
@@ -240,6 +282,34 @@
             })
             .then(resp => resp.blob());
     };
+
+    const findDestinationByTitle = (title)=>{
+        console.log(title);
+        console.log(destinationsData);
+        for (var keyword in destinationsData){
+            if (~title.indexOf(keyword)){
+                return destinationsData[keyword];
+            }
+        }
+    }
+
+    const getClientsData = (callback) => {
+        fetch('https://app.creditrepaircloud.com/myclients/export_client_csv/')
+        .then(resp=>resp.text())
+        .then(text=>{
+            const result = Papa.parse(text, {header:true});
+            console.log(result);
+            callback(result.data);
+        })
+    }
+
+    const getClientBySSN = (ssn) => {
+        console.log(ssn);
+        console.log(clientsData);
+
+        const f =  clientsData.filter(row=>row['Social Security'] == ssn);
+        return (f.length>0)? f[0]:undefined;
+    }
 
     const getExportEndpointUrl = (callback) =>{
         chrome.storage.sync.get('settings',(storageData)=>{

@@ -9,6 +9,7 @@
         "https://app.creditrepaircloud.com/*"
       ],
       "js": [
+        "papaparse.min.js",
         "jquery.min.js",
         "crc-letter-parser.js",
         "crc-letter-formatter.js",
