@@ -215,14 +215,14 @@
                             }
                             
                             const destination = findDestinationByTitle(l.title);
-                            
-                            if (destination[0]) letterData.to.name = destination[0] || letterData.to.name;
-                            if (destination[1]) letterData.to.address_line1 = destination[1];
-                            if (destination[2]) letterData.to.address_line2 = destination[2];
-                            if (destination[3]) letterData.to.address_city = destination[3];
-                            if (destination[4]) letterData.to.address_state = destination[4];
-                            if (destination[5]) letterData.to.address_zip = destination[5];
-
+                            if (destination){
+                                if (destination[0]) letterData.to.name = destination[0] || letterData.to.name;
+                                if (destination[1]) letterData.to.address_line1 = destination[1];
+                                if (destination[2]) letterData.to.address_line2 = destination[2];
+                                if (destination[3]) letterData.to.address_city = destination[3];
+                                if (destination[4]) letterData.to.address_state = destination[4];
+                                if (destination[5]) letterData.to.address_zip = destination[5]+'';//must be string
+                            }
 
                             if (extraData){
                                 Object.assign(letterData, extraData);
