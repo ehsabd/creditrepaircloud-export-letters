@@ -40,7 +40,7 @@ const parseLetter = (content) => {
 
     const findLetterDate = (lines, startIndex) => {
         for (var i = startIndex || 0; i < lines.length; i++) {
-            if (/^[0-9]+\/[0-9]+\/[0-9]{4}$/.test(lines[i])) {
+            if (/^[0-9]+\/[0-9]+\/[0-9]+$/.test(lines[i])) {
                 return { index: i };
             }
         }
