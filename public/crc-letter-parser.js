@@ -93,10 +93,10 @@ const parseLetter = (content) => {
     const fromParsed = parseAddress(fromAddressLines);
     let toParsed = null;
     const letterDate = findLetterDate(lines, afterdobssnumberindex);
+    if (!letterDate){
+        throw new Error('Cannot find Letter Date');
+    }
     if (fromParsed){
-        if (!letterDate){
-            throw new Error('Cannot find Letter Date');
-        }
         const toAddressLines = lines.slice(afterdobssnumberindex+1,letterDate.index);
         console.log(toAddressLines);
         toParsed = parseAddress(toAddressLines);
