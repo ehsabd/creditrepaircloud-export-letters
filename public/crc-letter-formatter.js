@@ -11,9 +11,9 @@ const formatLetter = (content, format) => {
     if (format === 'lob'){
         const parsedLetter = parseLetter(content);
         const letterDateIndex = findIndexOfLetterDate(content);
-        return content.substring(0, letterDateIndex) + 
-        `<p>Date of Birth: ${parsedLetter.dob}<br />SS#: ${parsedLetter.ssn}</p>` +
-        content.substring(letterDateIndex); 
+        return `${'<br>'.repeat(11)}
+        <p>Date of Birth: ${parsedLetter.dob}<br />SS#: ${parsedLetter.ssn}</p>
+        ${content.substring(letterDateIndex)}`; 
     }
     return content;
 }
