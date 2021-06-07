@@ -76,12 +76,13 @@
             const {letterData, status, editLink} = letter;
             reportTableBody.innerHTML+=`
             <tr>
-                <td>${letterData.crc_letter_id}</td>
+                <!--<td>${letterData.crc_letter_id}</td>-->
                 <td>${status}</td>
                 <td>${letterData.from ? letterData.from.name : '' }</td>
                 <td>${letterData.ssn}</td>
                 <td>${letterData.dob}</td>
                 <td>${editLink}</td>
+                <td><a download="${letterData.crc_letter_id}.pdf" href="data:application/pdf;base64,${letterData.file}">Download Letter</a></td>
             </tr>`
         }
 
@@ -135,7 +136,7 @@
         let reportTable = document.createElement('table');
         reportTable.innerHTML=`
         <thead>
-            <th>ID</th><th>Status</th><th>Client Name</th><th>SSN</th><th>DOB</th>
+            <th>Status</th><th>Client Name</th><th>SSN</th><th>DOB</th><th>Edit</th><th>Download</th>
         </thead>`;
         reportTableBody = document.createElement('tbody');
         reportTable.append(reportTableBody);
